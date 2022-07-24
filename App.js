@@ -19,6 +19,7 @@ export default function App() {
     
     <SafeAreaView style = {styles.container}>
       <Text style = {styles.month}>July</Text>
+      <Text>{'\n'}</Text>
       <SafeAreaView style={styles.daysOfWeek}>
         <Text style ={styles.daysOfWeek}>S</Text>
         <Text style ={styles.daysOfWeek}>M</Text>
@@ -44,7 +45,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#FFFBFF'
   },
   month: {
     paddingLeft: '6%',
@@ -52,22 +53,26 @@ const styles = StyleSheet.create({
   },
   daysOfWeek: {
     alignItems:'center',
-    paddingTop: '4%',
-    flexDirection: 'row',
     paddingLeft: '6.5%',
+    paddingTop: '0%',
+    paddingBottom: '4%',
+    flexDirection: 'row',
+
     flex: 1,
     fontSize: 13,
-    backgroundColor: '#fff',
+
+    backgroundColor: '#FFFBFF',
   },
   listItem: {
     alignItems:'center',
-    margin: 0.5,
+    margin: 0.8,
     fontSize: 13,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFBFF',
     height: 110.5,
     flex: 1
   },
   days: {
-    backgroundColor: 'gray',
+    
+    backgroundColor: '#E1E2EC',
   }
 });
