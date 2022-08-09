@@ -1,18 +1,38 @@
 import { StyleSheet, Text, View, SafeAreaView, FlatList } from 'react-native';
 import React, { useEffect, useState } from "react";
 
-const days2 = [ [26, 3, 10, 17, 24 , 31], [27, 4, 11, 18, 25, 1], [28, 5, 12, 19, 26, 2], [29, 6, 13, 20, 27, 3],
-                [30, 7, 14, 21, 28, 4], [1, 8, 15, 22, 29, 5], [2, 9, 16, 23, 30, 6], [31, 7, 14, 21, 28, 4],
-                [1, 8, 15, 22, 29, 5], [2, 9, 16, 23, 30, 6], [3, 10, 17, 24, 31, 7], [4, 11, 18, 25, 1, 8],
-                [5, 12, 19, 26, 2, 9], [6, 13, 20, 27, 3, 10], [28, 4, 11, 18, 25, 2], [29, 5, 12, 19, 26, 3],
-                [30, 6, 13, 20, 27, 4], [31, 7, 14, 21, 28, 5], [1, 8, 15, 22, 29, 6], [2, 9, 16, 23, 30, 7],
-                [3, 10, 17, 24, 1, 8]];
-const months = [ 'July', 'August', 'September']
+let days = [];
+let months = [];
+let firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let startingMonthAmount = 5; //initialize with X amount of months
 
+//initializing the dates
+for (let i = 0; i < startingMonthAmount; i++)
+{
+  let startingDayOfMonth = new Date(firstDayOfMonth); //the first, top-left day in said grid
+  months.push(startingDayOfMonth.toLocaleString('default', { month: 'long' })); 
+  startingDayOfMonth.setDate(startingDayOfMonth.getDate() - startingDayOfMonth.getDay())
+  for (let x = 0; x < 7; x++) //7 columns for S, M, T, W, T, F, S
+  {
+    let columnDay = new Date(startingDayOfMonth);
+    columnDay.setDate(columnDay.getDate() + x);
+    let columnDays = []; 
+    columnDays.push(columnDay.getDate()); //push the 1st row of the column
+
+    for (let y = 0; y < 5; y++) //5 more rows in each column, 1 week apart
+    {
+      columnDay.setDate(columnDay.getDate() + 7); 
+      columnDays.push(columnDay.getDate());
+    }
+    days.push(columnDays);
+  }
+  firstDayOfMonth.setMonth(firstDayOfMonth.getMonth() + 1); //next month
+}
 
 export default function App() {
 
-  const [month, setMonth] = useState('July');
+  //populateDates();
+  const [month, setMonth] = useState(months[0]);
   const renderList = ({ item,index }) => {
     return (
       <View style = {styles.viewListItem}>
@@ -55,7 +75,7 @@ export default function App() {
       </SafeAreaView>
       <SafeAreaView style={styles.viewListItem}>
       <FlatList 
-          data={days2} 
+          data={days} 
           pagingEnabled
           style = {styles.days}
           horizontal
