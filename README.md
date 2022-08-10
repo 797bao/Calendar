@@ -1,3 +1,3 @@
 # Calendar
-Initial React Native Creation, will upload my weekly branch soon
+Calendar application with journaling and analytics feature
 
