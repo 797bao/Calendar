@@ -1,7 +1,7 @@
 
 
 import React from 'react'
-import MonthView from './components/RegistrationPage'
+import DailyView from './components/DailyView'
 
 
 const App = () => {
@@ -9,7 +9,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path='/' exact element={<HomePage />} />
-        <Route path='/MonthView' element={<MonthView />} />
+        <Route path='/DailyView' element={<DailyView />} />
       
       </Routes>
     </Router>
