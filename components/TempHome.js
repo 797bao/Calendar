@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import DailyView from './DailyView'
 import MonthlyView from './MonthlyView'
+import AddEvent from './AddEvent';
 
 const TempHome = () => {
     return (
@@ -13,6 +14,10 @@ const TempHome = () => {
         <div>
             <Link to="/MonthlyView" state = {MonthlyView}><button>Monthly View</button></Link>
         </div>
+
+        <div>
+            <Link to="/AddEvent" state = {AddEvent}><button>Add Event</button></Link>
+            </div>
         </div>
        
         
