@@ -1,176 +1,215 @@
-import { StyleSheet, Text, View, SafeAreaView, FlatList, TouchableOpacity} from 'react-native';
-import React, { useEffect, useState } from "react";
+import * as React from 'react';
+import DrawnGrid from './components/DrawnGrid'
+import TimeCol from './components/TimeCol'
+import styles from './components/styles';
+import HrLine from './components/HrLine'
+import NowBar from './components/NowBar'
+import ScheduledData from './components/ScheduledData'
+import SmartScroll from './components/SmartScroll'
 
-//an array holding array of numbers for each day, each month holds 7 arrays of 6 numbers in each aray
-let days = [];
-let months = [];
+import { Text,  View, SafeAreaView } from 'react-native';
+import { FlatList, ScrollView, Dimensions  } from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import { ContextProvider } from './components/ContextProvider';
+import todayData from './services/todayData';
 
-appendMonths(2);
+let carousel = []
+let hourSize = Dimensions.get('window').height / 13.34;
+let dayView = new Date();
+let carouselLength = 7;
 
-//adding future months
-function appendMonths(monthAmount) {
-  let firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  if (days.length != 0) {
-    let lastMonth = months[months.length - 1]; //last month in the populated list
-    firstDayOfMonth = new Date(lastMonth);
-    firstDayOfMonth.setMonth(firstDayOfMonth.getMonth() + 1);
-  }
-  for (let i = 0; i < monthAmount; i++) {
-    months.push(new Date(firstDayOfMonth)); 
-    days = [...days, ...initializeDaysForMonth(firstDayOfMonth)]
-    firstDayOfMonth.setMonth(firstDayOfMonth.getMonth() + 1); //next month
-  }
+//supplying the carousel to 7 items preloaded, 3 to the right and 3 to the back
+for (let i = 0; i < carouselLength; i++) {
+  let temp = new Date(dayView.getFullYear(), dayView.getMonth(), dayView.getDate() + i);
+  if (i >= carouselLength/2) 
+    carousel[i] =  new Date(dayView.getFullYear(), dayView.getMonth(), dayView.getDate() + i -carouselLength);
+  else
+    carousel[i] = temp;
 }
 
-//adding previous months
-function prependMonths(monthAmount) {
-  let firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  if (days.length != 0) {
-    let lastMonth = months[0]; //last month in the populated list
-    firstDayOfMonth = new Date(lastMonth);
-    firstDayOfMonth.setMonth(firstDayOfMonth.getMonth() - 1); //previous months
-  }
-  for (let i = 0; i < monthAmount; i++) {
-    months.unshift(new Date(firstDayOfMonth));
-    days = [...initializeDaysForMonth(firstDayOfMonth), ...days]
-    firstDayOfMonth.setMonth(firstDayOfMonth.getMonth() - 1); //next month
-  }
+
+const loggedItems = new Map();
+
+loggedItems.set(new Date(2022, 7, 30).toString(), [  
+  {
+    title: 'Lunch Appointment',
+    subtitle: 'With John',
+    start: new Date(2022, 7, 30, 14, 21),
+    end: new Date(2022, 7, 30, 15, 20),
+    color: '#390099',
+  },
+  {
+    title: 'Lunch Appointment',
+    subtitle: 'With Harry',
+    start: new Date(2022, 7, 30, 13, 20),
+    end: new Date(2022, 7, 30, 14, 20),
+    color: '#390099',
+  },
+  {
+    title: 'Lunch Appointment',
+    subtitle: 'With Bao',
+    start: new Date(2022, 7, 30, 13, 20),
+    end: new Date(2022, 7, 30, 14, 20),
+    color: '#390099',
+  }])
+
+  loggedItems.set(new Date(2022, 7, 31).toString(), [  
+    {
+      title: 'Lunch Appointment',
+      subtitle: 'With John',
+      start: new Date(2022, 7, 30, 14, 21),
+      end: new Date(2022, 7, 30, 15, 20),
+      color: '#ff0000',
+    }])
+
+const data = [
+  {
+    title: 'Lunch Appointment',
+    subtitle: 'With John',
+    start: new Date(2022, 7, 30, 14, 21),
+    end: new Date(2022, 7, 30, 15, 20),
+    color: '#390099',
+  },
+    {
+      title: 'Lunch Appointment',
+      subtitle: 'With Harry',
+      start: new Date(2022, 7, 30, 13, 20),
+      end: new Date(2022, 7, 30, 14, 20),
+      color: '#390099',
+    },
+    {
+      title: 'Lunch Appointment',
+      subtitle: 'With Bao',
+      start: new Date(2022, 7, 30, 13, 20),
+      end: new Date(2022, 7, 30, 14, 20),
+      color: '#390099',
+    },
+
+  ]
+
+function appendToList(index) {
+  let arrHalfLen =  Math.floor(carousel.length/2);
+  let appendIndex = (index + arrHalfLen) % carousel.length;
+
+  //make a new date that is a deep copy of the current day value we are on
+  let newVal = new Date(carousel[index].getFullYear(), carousel[index].getMonth(), carousel[index].getDate());
+  carousel[appendIndex] = newVal; //assign it so it lays in the correct month
+  carousel[appendIndex].setDate(newVal.getDate() + Math.floor(carousel.length/2)) //then append it by X days
+
+  console.log(carousel);
 }
 
-function initializeDaysForMonth(firstDayOfMonth) {
-  //the first cell, top-left corner day in said grid, does not mean the the 1st of each month
-  let startingDayOfMonth = new Date(firstDayOfMonth); 
-  startingDayOfMonth.setDate(startingDayOfMonth.getDate() - startingDayOfMonth.getDay());
+function prependToList(index) {
+  let arrHalfLen =  Math.floor(carousel.length/2);
+  let prependIndex = mod(index - arrHalfLen, carousel.length);
 
-  let daysForMonth = [];
-  for (let x = 0; x < 7; x++) {//7 columns for S, M, T, W, T, F, S
-    let columnDay = new Date(startingDayOfMonth);
-    columnDay.setDate(columnDay.getDate() + x);
-    let columnDays = []; 
-    columnDays.push(new Date(columnDay)); //push the 1st row of the column
+  let newVal = new Date(carousel[index].getFullYear(), carousel[index].getMonth(), carousel[index].getDate());
+  carousel[prependIndex] = newVal; //assign it so it lays in the correct month
+  carousel[prependIndex].setDate(newVal.getDate() - Math.floor(carousel.length/2)) //then append it by X days
 
-    for (let y = 0; y < 5; y++) {//5 more rows in each column, 1 week apart
-      columnDay.setDate(columnDay.getDate() + 7); 
-      columnDays.push(new Date(columnDay));
+  console.log(carousel);
+}
+
+console.log("initial carousel " + carousel);
+
+
+//for negative modulus to return positive, e.g.  -1 % 7 = 6
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
+export default class App extends React.Component {
+
+    constructor(props){
+      super(props);
+      this.state = {
+        activeIndex:0,
+        carouselItems: carousel,
+      }
     }
-    daysForMonth.push(columnDays);
-  }
-  return daysForMonth;
+
+    _renderItem({item,index}){
+        return (
+          <View style={{
+              backgroundColor:'floralwhite',
+              borderRadius: 5,
+              height: Dimensions.get('screen').height,
+              padding: 50,
+              }}>
+            <Text style={{fontSize: 30}}>{item.getDate() + ' ' + item.toLocaleString('en-us', { month: 'long' })}</Text>
+            <Text>{item.getDate()}</Text>
+
+            <ContextProvider hour_size={hourSize} /**set hour_size prop so drawngrid>Hrline can take that data */>
+              <SmartScroll hour_size={hourSize}>
+            
+                <View style={styles.body} >
+                  
+                  <View style={styles.hour_col} /*the hours PM & AM */> 
+                    <TimeCol hour_size={hourSize}/>
+                  </View>
+ 
+                  <View style={styles.schedule_col} /**the horizontal lines */>
+                    <DrawnGrid></DrawnGrid>
+                    <NowBar hour_size={hourSize}/>
+                    {<ScheduledData dataArray={loggedItems.get(item.toString())}/> }
+                  </View>
+          
+                </View>
+              </SmartScroll>
+            </ContextProvider>
+          </View>
+
+        )
+    }
+
+    render() {
+        return (
+          <SafeAreaView style={{flex: 1, backgroundColor:'rebeccapurple', paddingTop: 50, }}>
+            <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
+                <Carousel
+                  layout={"stack"}
+                  layoutCardOffset={1}
+                  ref={ref => this.carousel = ref}
+                  loop
+                  centerContent
+                  data={this.state.carouselItems}
+                  enableSnap
+                  loopClonesPerSide={3}
+                  sliderWidth={Dimensions.get('screen').width}
+                  itemWidth={Dimensions.get('screen').width}
+                  renderItem={this._renderItem}
+                  onBeforeSnapToItem =  {(index) => {
+                    //console.log("index " + index + " active " + this.state.activeIndex);
+                    if (index > this.state.activeIndex) {
+                      if (this.state.activeIndex == 0 && index == carousel.length - 1) {
+                        //console.log("swiping left, was at last index to first index")
+                        prependToList(index) //swiping left, was at last index to first index
+                      }
+                      else {
+                       // console.log("swiping right p1")
+                        appendToList(index)
+                      }
+                        
+                    }
+                    else if (index < this.state.activeIndex) {
+                      if (this.state.activeIndex == carousel.length - 1 && index == 0) {
+                        appendToList(index) //swiping right was at last index now back to first
+                        //console.log("swiping right was at last index now back to first")
+                      }
+                      else {
+                        //console.log("swiping left p1")
+                        prependToList(index)
+                      }
+                        
+                    }
+                    this.setState({activeIndex:index}) 
+                  }}
+                  onSnapToItem = { (index) => {
+                    //console.log("SNAPPING " + index);
+                  }} />
+    
+            </View>
+          </SafeAreaView>
+        );
+    }
 }
-
-//the generated data is displayed in a horizontal flatlist
-export default function App() {
-
-  const pressDay = (day) => {
-    console.log("PRESSED " + months[0]); //TODO: for Farzin, implement the routes 
-  }
-
-  const [month, setMonth] = useState(months[0]);
-
-
-  const renderList = ({ item,index }) => {
-    return (
-      <View style = {styles.viewListItem}>
-        <TouchableOpacity  onPress={() => pressDay(item[0])}>
-          <Text  style={styles.listItem}>{item[0].getDate()}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressDay(item[1])}>
-          <Text  style={styles.listItem}>{item[1].getDate()}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressDay(item[2])}>
-          <Text  style={styles.listItem}>{item[2].getDate()}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressDay(item[3])}>
-          <Text  style={styles.listItem}>{item[3].getDate()}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressDay(item[4])}>
-          <Text  style={styles.listItem}>{item[4].getDate()}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressDay(item[5])}>
-          <Text  style={styles.listItem}>{item[5].getDate()}</Text>
-        </TouchableOpacity>
-      </View>
-    )
-  };
-
-  return (
-    <SafeAreaView style = {styles.container}>
-      <SafeAreaView style={styles.viewMonth}>
-        <Text style = {styles.textMonth}>{month.toLocaleString('default', { month: 'long' })}</Text>
-      </SafeAreaView>
-      <SafeAreaView style={styles.viewDaysOfWeek}>
-        <Text style ={styles.textDaysOfWeek}>S</Text>
-        <Text style ={styles.textDaysOfWeek}>M</Text>
-        <Text style ={styles.textDaysOfWeek}>T</Text>
-        <Text style ={styles.textDaysOfWeek}>W</Text>
-        <Text style ={styles.textDaysOfWeek}>T</Text>
-        <Text style ={styles.textDaysOfWeek}>F</Text>
-        <Text style ={styles.textDaysOfWeek}>S</Text>
-      </SafeAreaView>
-      <SafeAreaView style={styles.viewListItem}>
-
-      <FlatList 
-          data={days} //the generated data
-          pagingEnabled
-          style = {styles.days}
-          horizontal
-          renderItem={renderList}
-          //change the text of month based on scroll distance
-          onScroll = {(event) => {
-            const scrollOffset = event.nativeEvent.contentOffset.x
-            const scrollBarWidth = event.nativeEvent.layoutMeasurement.width;
-            let monthIndex = Math.round(scrollOffset/scrollBarWidth)
-
-            if (monthIndex < 0) //keeping it in bounds
-              monthIndex = 0
-            else if (monthIndex >= months.length)
-              monthIndex = months.length - 1;
-
-            setMonth(months[monthIndex]);
-          }}
-         />
-      </SafeAreaView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFBFF'
-  },
-  viewMonth: {
-    flex: .05
-  },
-  textMonth: {
-    paddingLeft: '6.15%',
-    fontSize: 23
-  },
-  viewDaysOfWeek: {
-    alignItems:'center',
-    flexDirection: 'row',
-    flex: .0365,
-    fontSize: 13,
-    backgroundColor: '#FFFBFF',
-  },
-  textDaysOfWeek:{
-    paddingLeft: '6.15%',
-    fontSize: 13,
-    flex: 1
-  },
-  viewListItem: {
-    flex: 1,
-  },
-  listItem: {
-    paddingLeft: 18,
-    width: 53.5,
-    height: 110,
-    fontSize: 13,
-    backgroundColor: '#FFFBFF',
-    margin: 1,
-  },
-  days: {
-    flex:1,
-    backgroundColor: '#E1E2EC',
-  }
-});
