@@ -2,23 +2,25 @@ import * as React from 'react';
 import DrawnGrid from './components/DrawnGrid'
 import TimeCol from './components/TimeCol'
 import styles from './components/styles';
-import HrLine from './components/HrLine'
 import NowBar from './components/NowBar'
 import ScheduledData from './components/ScheduledData'
 import SmartScroll from './components/SmartScroll'
+import procData from './services/procData'
 
 import { Text,  View, SafeAreaView } from 'react-native';
-import { FlatList, ScrollView, Dimensions  } from 'react-native';
+import {Dimensions  } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { ContextProvider } from './components/ContextProvider';
-import todayData from './services/todayData';
 
+/** the carousel loops through an array, swipe right = index++, swipe left = index--
+each swipe modifies the furthest looped index away from the current index instead of the next index
+to avoid values being potentially visually changed abruptly for a seamless experience */
+let carouselLength = 5; //keep minimum 5
 let carousel = []
 let hourSize = Dimensions.get('window').height / 13.34;
 let dayView = new Date();
-let carouselLength = 7;
 
-//supplying the carousel to 7 items preloaded, 3 to the right and 3 to the back
+//supplying the carousel
 for (let i = 0; i < carouselLength; i++) {
   let temp = new Date(dayView.getFullYear(), dayView.getMonth(), dayView.getDate() + i);
   if (i >= carouselLength/2) 
@@ -27,91 +29,75 @@ for (let i = 0; i < carouselLength; i++) {
     carousel[i] = temp;
 }
 
-
+//all the scheduled items (bars) resides in a map, key = day, value = array of all values in that day
+//procData adds a new field -> height to offset bars determined by start/end time
 const loggedItems = new Map();
+loggedItems.set(new Date(2022, 7, 30).toString(), procData([  
+  {
+    title: 'TEST',
+    subtitle: '',
+    start: new Date(2022, 7, 30, 2, 21),
+    end: new Date(2022, 7, 30, 4, 0),
+    color: '#aa0000',
+  },
+], hourSize));
 
-loggedItems.set(new Date(2022, 7, 30).toString(), [  
+loggedItems.set(new Date(2022, 8, 1).toString(), 
+  procData([  
   {
     title: 'Lunch Appointment',
     subtitle: 'With John',
-    start: new Date(2022, 7, 30, 14, 21),
-    end: new Date(2022, 7, 30, 15, 20),
-    color: '#390099',
-  },
-  {
-    title: 'Lunch Appointment',
-    subtitle: 'With Harry',
-    start: new Date(2022, 7, 30, 13, 20),
-    end: new Date(2022, 7, 30, 14, 20),
+    start: new Date(2022, 7, 8, 1, 21),
+    end: new Date(2022, 7, 8, 2, 20),
     color: '#390099',
   },
   {
     title: 'Lunch Appointment',
     subtitle: 'With Bao',
-    start: new Date(2022, 7, 30, 13, 20),
-    end: new Date(2022, 7, 30, 14, 20),
+    start: new Date(2022, 7, 8, 1, 20),
+    end: new Date(2022, 7, 8, 4, 20),
+    color: '#ff0000',
+  },
+  {
+    title: 'Lunch Appointment',
+    subtitle: 'With Harry',
+    start: new Date(2022, 7, 8, 1, 20),
+    end: new Date(2022, 7, 8, 6, 20),
     color: '#390099',
-  }])
+  }], hourSize)
+);
 
-  loggedItems.set(new Date(2022, 7, 31).toString(), [  
-    {
-      title: 'Lunch Appointment',
-      subtitle: 'With John',
-      start: new Date(2022, 7, 30, 14, 21),
-      end: new Date(2022, 7, 30, 15, 20),
-      color: '#ff0000',
-    }])
-
-const data = [
+loggedItems.set(new Date(2022, 7, 31).toString(), procData([  
   {
     title: 'Lunch Appointment',
     subtitle: 'With John',
-    start: new Date(2022, 7, 30, 14, 21),
-    end: new Date(2022, 7, 30, 15, 20),
-    color: '#390099',
+    start: new Date(2022, 7, 31, 1, 21),
+    end: new Date(2022, 7, 31, 6, 0),
+    color: '#ff0000',
   },
-    {
-      title: 'Lunch Appointment',
-      subtitle: 'With Harry',
-      start: new Date(2022, 7, 30, 13, 20),
-      end: new Date(2022, 7, 30, 14, 20),
-      color: '#390099',
-    },
-    {
-      title: 'Lunch Appointment',
-      subtitle: 'With Bao',
-      start: new Date(2022, 7, 30, 13, 20),
-      end: new Date(2022, 7, 30, 14, 20),
-      color: '#390099',
-    },
+], hourSize));
 
-  ]
-
+//shifts content of the carousel 1 day forward by changing the earliest day to the latest day + 1
 function appendToList(index) {
   let arrHalfLen =  Math.floor(carousel.length/2);
-  let appendIndex = (index + arrHalfLen) % carousel.length;
-
   //make a new date that is a deep copy of the current day value we are on
-  let newVal = new Date(carousel[index].getFullYear(), carousel[index].getMonth(), carousel[index].getDate());
-  carousel[appendIndex] = newVal; //assign it so it lays in the correct month
-  carousel[appendIndex].setDate(newVal.getDate() + Math.floor(carousel.length/2)) //then append it by X days
+  let curDay = new Date(carousel[index].getFullYear(), carousel[index].getMonth(), carousel[index].getDate());
 
-  console.log(carousel);
+  let appendIndex = (index + arrHalfLen) % carousel.length; //the index of data we want to modify
+  carousel[appendIndex] = curDay; 
+  carousel[appendIndex].setDate(curDay.getDate() + arrHalfLen) //add by X days based on carousel's length
 }
 
+//shifts content of the carousel 1 day backwards by changing the latest day to the earliest day - 1
 function prependToList(index) {
-  let arrHalfLen =  Math.floor(carousel.length/2);
-  let prependIndex = mod(index - arrHalfLen, carousel.length);
+  let arrHalfLen = Math.floor(carousel.length/2);
+  //make a new date that is a deep copy of the current day value we are on
+  let curDay = new Date(carousel[index].getFullYear(), carousel[index].getMonth(), carousel[index].getDate());
 
-  let newVal = new Date(carousel[index].getFullYear(), carousel[index].getMonth(), carousel[index].getDate());
-  carousel[prependIndex] = newVal; //assign it so it lays in the correct month
-  carousel[prependIndex].setDate(newVal.getDate() - Math.floor(carousel.length/2)) //then append it by X days
-
-  console.log(carousel);
+  let prependIndex = mod(index - arrHalfLen, carousel.length); //the index of data we want to modify
+  carousel[prependIndex] = curDay; 
+  carousel[prependIndex].setDate(curDay.getDate() - arrHalfLen) //subtract by X days based on carousel's length
 }
-
-console.log("initial carousel " + carousel);
-
 
 //for negative modulus to return positive, e.g.  -1 % 7 = 6
 function mod(n, m) {
@@ -128,7 +114,9 @@ export default class App extends React.Component {
       }
     }
 
+    //the carousel's data to render
     _renderItem({item,index}){
+        let datesInMap = loggedItems.get(item.toString());
         return (
           <View style={{
               backgroundColor:'floralwhite',
@@ -137,23 +125,17 @@ export default class App extends React.Component {
               padding: 50,
               }}>
             <Text style={{fontSize: 30}}>{item.getDate() + ' ' + item.toLocaleString('en-us', { month: 'long' })}</Text>
-            <Text>{item.getDate()}</Text>
-
             <ContextProvider hour_size={hourSize} /**set hour_size prop so drawngrid>Hrline can take that data */>
               <SmartScroll hour_size={hourSize}>
-            
                 <View style={styles.body} >
-                  
                   <View style={styles.hour_col} /*the hours PM & AM */> 
                     <TimeCol hour_size={hourSize}/>
                   </View>
- 
                   <View style={styles.schedule_col} /**the horizontal lines */>
                     <DrawnGrid></DrawnGrid>
                     <NowBar hour_size={hourSize}/>
-                    {<ScheduledData dataArray={loggedItems.get(item.toString())}/> }
+                    {!!datesInMap && <ScheduledData dataArray={loggedItems.get(item.toString())}/> }
                   </View>
-          
                 </View>
               </SmartScroll>
             </ContextProvider>
@@ -174,40 +156,26 @@ export default class App extends React.Component {
                   centerContent
                   data={this.state.carouselItems}
                   enableSnap
-                  loopClonesPerSide={3}
+                  loopClonesPerSide={4} //allows swiping 4x without stopping
                   sliderWidth={Dimensions.get('screen').width}
                   itemWidth={Dimensions.get('screen').width}
                   renderItem={this._renderItem}
                   onBeforeSnapToItem =  {(index) => {
-                    //console.log("index " + index + " active " + this.state.activeIndex);
                     if (index > this.state.activeIndex) {
-                      if (this.state.activeIndex == 0 && index == carousel.length - 1) {
-                        //console.log("swiping left, was at last index to first index")
+                      if (this.state.activeIndex == 0 && index == carousel.length - 1) 
                         prependToList(index) //swiping left, was at last index to first index
-                      }
-                      else {
-                       // console.log("swiping right p1")
-                        appendToList(index)
-                      }
-                        
+                      else 
+                        appendToList(index) //swiping right
                     }
                     else if (index < this.state.activeIndex) {
-                      if (this.state.activeIndex == carousel.length - 1 && index == 0) {
+                      if (this.state.activeIndex == carousel.length - 1 && index == 0) 
                         appendToList(index) //swiping right was at last index now back to first
-                        //console.log("swiping right was at last index now back to first")
-                      }
-                      else {
-                        //console.log("swiping left p1")
-                        prependToList(index)
-                      }
-                        
+                      else
+                        prependToList(index) //swiping left
                     }
                     this.setState({activeIndex:index}) 
                   }}
-                  onSnapToItem = { (index) => {
-                    //console.log("SNAPPING " + index);
-                  }} />
-    
+                />
             </View>
           </SafeAreaView>
         );

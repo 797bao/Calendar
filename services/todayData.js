@@ -8,7 +8,7 @@ const todayData = (dataArray, date) => {
     ret1 = sameDay(appt.end, date);
     return ret || ret1;
   });
-  return procRows(today);
+  return procRows(dataArray);
 }
 
 const sameDay = (d1, d2) => {
