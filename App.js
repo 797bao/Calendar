@@ -6,11 +6,15 @@ import NowBar from './components/NowBar'
 import ScheduledData from './components/ScheduledData'
 import SmartScroll from './components/SmartScroll'
 import procData from './services/procData'
+import Header from './components/Header';
 
 import { Text,  View, SafeAreaView } from 'react-native';
 import {Dimensions  } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { ContextProvider } from './components/ContextProvider';
+import {PropTypes} from 'prop-types'
+import Colors from './constants/colors';
+import tinycolor from 'tinycolor2';
 
 /** the carousel loops through an array, swipe right = index++, swipe left = index--
 each swipe modifies the furthest looped index away from the current index instead of the next index
@@ -19,6 +23,7 @@ let carouselLength = 5; //keep minimum 5
 let carousel = []
 let hourSize = Dimensions.get('window').height / 13.34;
 let dayView = new Date();
+let status_bar = PropTypes.bool;
 
 //supplying the carousel
 for (let i = 0; i < carouselLength; i++) {
@@ -47,24 +52,25 @@ loggedItems.set(new Date(2022, 8, 1).toString(),
   {
     title: 'Lunch Appointment',
     subtitle: 'With John',
-    start: new Date(2022, 7, 8, 1, 21),
-    end: new Date(2022, 7, 8, 2, 20),
+    start: new Date(2022, 8, 1, 1, 21),
+    end: new Date(2022, 8, 1, 7, 20),
     color: '#390099',
   },
   {
     title: 'Lunch Appointment',
     subtitle: 'With Bao',
-    start: new Date(2022, 7, 8, 1, 20),
-    end: new Date(2022, 7, 8, 4, 20),
+    start: new Date(2022, 8, 1, 3, 20),
+    end: new Date(2022, 8, 1, 7, 20),
     color: '#ff0000',
   },
   {
     title: 'Lunch Appointment',
-    subtitle: 'With Harry',
-    start: new Date(2022, 7, 8, 1, 20),
-    end: new Date(2022, 7, 8, 6, 20),
-    color: '#390099',
-  }], hourSize)
+    subtitle: 'With Bao',
+    start: new Date(2022, 8, 1, 4, 20),
+    end: new Date(2022, 8, 1, 5, 20),
+    color: '#ffff00',
+  },
+], hourSize)
 );
 
 loggedItems.set(new Date(2022, 7, 31).toString(), procData([  
@@ -122,32 +128,44 @@ export default class App extends React.Component {
               backgroundColor:'floralwhite',
               borderRadius: 5,
               height: Dimensions.get('screen').height,
-              padding: 50,
+              padding: 0,
               }}>
             <Text style={{fontSize: 30}}>{item.getDate() + ' ' + item.toLocaleString('en-us', { month: 'long' })}</Text>
             <ContextProvider hour_size={hourSize} /**set hour_size prop so drawngrid>Hrline can take that data */>
-              <SmartScroll hour_size={hourSize}>
-                <View style={styles.body} >
-                  <View style={styles.hour_col} /*the hours PM & AM */> 
-                    <TimeCol hour_size={hourSize}/>
+              <View style={styles.container}>
+                <SmartScroll hour_size={hourSize}>
+                  <View style={styles.body} >
+                    <View style={styles.hour_col} /*the hours PM & AM */> 
+                      <TimeCol hour_size={hourSize}/>
+                    </View>
+                    <View style={styles.schedule_col} /**the horizontal lines */>
+                      <DrawnGrid></DrawnGrid>
+                      <NowBar hour_size={hourSize}/>
+               
+                        {!!datesInMap && <ScheduledData dataArray={loggedItems.get(item.toString())}/> }
+                   
+                    </View>
+                    
                   </View>
-                  <View style={styles.schedule_col} /**the horizontal lines */>
-                    <DrawnGrid></DrawnGrid>
-                    <NowBar hour_size={hourSize}/>
-                    {!!datesInMap && <ScheduledData dataArray={loggedItems.get(item.toString())}/> }
-                  </View>
-                </View>
-              </SmartScroll>
+                </SmartScroll>
+              </View>
             </ContextProvider>
           </View>
 
         )
     }
 
+
     render() {
         return (
-          <SafeAreaView style={{flex: 1, backgroundColor:'rebeccapurple', paddingTop: 50, }}>
+          <SafeAreaView style={{flex: 1, backgroundColor:Colors.light_gray}}>
+            <Header 
+                status_bar={PropTypes.bool} 
+                accent={Colors.blue} 
+                left_icon={PropTypes.node} 
+                header_color={Colors.light_gray}/>
             <View style={{ flex: 1, flexDirection:'row', justifyContent: 'center', }}>
+     
                 <Carousel
                   layout={"stack"}
                   layoutCardOffset={1}

@@ -23,7 +23,7 @@ HrLine.propTypes = {
 };
 
 HrLine.defaultProps = {
-  color: '#BABABA',
+  color: '#E1E3ED',
   width: 1,
 };
 
