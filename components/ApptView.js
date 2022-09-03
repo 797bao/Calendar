@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React , { useRef } from 'react';
+import { Animated, View, ViewStyleSheet, PanResponder, Text, TouchableOpacity } from 'react-native';
 import tinycolor from 'tinycolor2';
 import Colors from '../constants/colors';
 import {hrsToStart} from '../services/hrsToPx';
