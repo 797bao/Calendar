@@ -7,8 +7,35 @@ import {hrsToStart} from '../services/hrsToPx';
 const ApptView = ({topTime, appt, hour_size, onEventPress}) => {
   const color = tinycolor(appt.color).isValid() ? tinycolor(appt.color).toHexString() : Colors.red;
   const margin = hrsToStart(appt.start, topTime) * hour_size;
-
-  return <View
+  const pan = useRef(new Animated.ValueXY()).current;
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        pan.setOffset({
+        
+          y: pan.y._value
+        });
+      },
+      onPanResponderMove: Animated.event(
+        [
+          null,
+          {dy: pan.y }
+        ],
+        {useNativeDriver: false}
+      ),
+      onPanResponderRelease: () => {
+        pan.flattenOffset();
+      }
+    })
+  ).current;
+  return <Animated.View
+  style={{
+    transform: [ { translateY: pan.y }]
+  }}
+  {...panResponder.panHandlers}
+>
+  <View
     style={{
       flex: 1,
       marginTop: margin,
@@ -35,6 +62,7 @@ const ApptView = ({topTime, appt, hour_size, onEventPress}) => {
       }
     </TouchableOpacity>
   </View>
+  </Animated.View>
 }
 
 export default ApptView;
