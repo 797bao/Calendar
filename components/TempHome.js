@@ -1,21 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom'
-import DailyView from './DailyView'
-import MonthlyView from './MonthlyView'
+import React from 'react'
+import { TouchableOpacity, Text } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
 const TempHome = () => {
-    return (
-        <div>
-        <h1>Temporary Home Page</h1>
-        <div>
-            <Link to="/DailyView" state = {DailyView}><button>Daily View</button></Link>
-        </div>
-        <div>
-            <Link to="/MonthlyView" state = {MonthlyView}><button>Monthly View</button></Link>
-        </div>
-        </div>
-       
-        
-    );
-    }
-export default TempHome;
+   const goToAbout = () => {
+      Actions.about()
+   }
+   return (
+      <TouchableOpacity style = {{ margin: 128 }} onPress = {goToAbout}>
+         <Text>This is HOME!</Text>
+      </TouchableOpacity>
+   )
+}
+export default TempHome

@@ -1,21 +1,26 @@
+import * as React from 'react';
+import { Button, View, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from './components/HomeScreen';
+import DetailsScreen from './components/DetailsScreen';
+//import TempHome from './components/TempHome';
+import MonthlyView from './components/MonthlyView';
+import DailyView from './components/DailyView';
 
+const Stack = createNativeStackNavigator();
 
-import React from 'react'
-import DailyView from './components/DailyView'
-import MonthlyView from './components/MonthlyView'
-import TempHome from './components/TempHome'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-
-const App = () => {
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path='/' exact element={<TempHome />} />
-        <Route path='/DailyView' element={<DailyView />} />
-        <Route path='/MonthlyView' element={<MonthlyView />} />
-      </Routes>
-    </Router>
-  )
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Details" component={DetailsScreen} />
+        <Stack.Screen name="MonthlyView" component={MonthlyView} />
+        <Stack.Screen name="DailyView" component={DailyView} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
 
-export default App
+export default App;
