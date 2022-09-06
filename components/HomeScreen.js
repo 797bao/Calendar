@@ -18,6 +18,10 @@ function HomeScreen({ navigation }) {
           title="Go to DailyView"
           onPress={() => navigation.navigate('DailyView')}
         />
+       <Button
+          title="Go to AddEvent"
+          onPress={() => navigation.navigate('AddEvent')}
+        />
       </View>
     );
   }

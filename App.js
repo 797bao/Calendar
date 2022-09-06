@@ -7,6 +7,7 @@ import DetailsScreen from './components/DetailsScreen';
 //import TempHome from './components/TempHome';
 import MonthlyView from './components/MonthlyView';
 import DailyView from './components/DailyView';
+import AddEvent from './components/AddEvent';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ function App() {
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="MonthlyView" component={MonthlyView} />
         <Stack.Screen name="DailyView" component={DailyView} />
+        <Stack.Screen name="AddEvent" component={AddEvent} />
       </Stack.Navigator>
     </NavigationContainer>
   );
