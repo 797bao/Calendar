@@ -7,7 +7,21 @@ import SmartScroll from "./components/SmartScroll";
 import procData from "./services/procData";
 import Header from "./components/Header";
 
-import { Text, View, SafeAreaView } from "react-native";
+/** 
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import DailyView from "./components/DailyView";
+import AddEvent from "./components/AddEvent";
+*/
+
+import {
+  Text,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from "react-native";
 import { Dimensions } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { AppContext, ContextProvider } from "./components/ContextProvider";
@@ -61,28 +75,28 @@ loggedItems.set(
 );
 
 loggedItems.set(
-  new Date(2022, 8, 1).toString(),
+  new Date(2022, 8, 13).toString(),
   procData(
     [
       {
         title: "Lunch Appointment",
         subtitle: "With John",
-        start: new Date(2022, 8, 1, 1, 21),
-        end: new Date(2022, 8, 1, 7, 20),
+        start: new Date(2022, 8, 13, 1, 21),
+        end: new Date(2022, 8, 13, 7, 20),
         color: "#390099",
       },
       {
         title: "Lunch Appointment",
         subtitle: "With Bao",
-        start: new Date(2022, 8, 1, 3, 20),
-        end: new Date(2022, 8, 1, 7, 20),
+        start: new Date(2022, 8, 13, 3, 20),
+        end: new Date(2022, 8, 13, 7, 20),
         color: "#ff0000",
       },
       {
         title: "Lunch Appointment",
         subtitle: "With Bao",
-        start: new Date(2022, 8, 1, 4, 20),
-        end: new Date(2022, 8, 1, 5, 20),
+        start: new Date(2022, 8, 13, 4, 20),
+        end: new Date(2022, 8, 13, 5, 20),
         color: "#ffff00",
       },
     ],
@@ -91,14 +105,14 @@ loggedItems.set(
 );
 
 loggedItems.set(
-  new Date(2022, 7, 31).toString(),
+  new Date(2022, 8, 12).toString(),
   procData(
     [
       {
         title: "Lunch Appointment",
         subtitle: "With John",
-        start: new Date(2022, 7, 31, 1, 21),
-        end: new Date(2022, 7, 31, 6, 0),
+        start: new Date(2022, 8, 12, 1, 21),
+        end: new Date(2022, 8, 12, 6, 0),
         color: "#ff0000",
       },
     ],
@@ -158,7 +172,7 @@ export default class App extends React.Component {
         style={{
           backgroundColor: "floralwhite",
           borderRadius: 5,
-          height: Dimensions.get("screen").height * 0.8,
+          height: Dimensions.get("screen").height * 0.85,
           padding: 0,
         }}
       >
@@ -196,6 +210,7 @@ export default class App extends React.Component {
             left_icon={PropTypes.node}
             header_color={Colors.light_gray}
           />
+
           <AppContext.Consumer>
             {(context) => {
               return (
@@ -240,6 +255,15 @@ export default class App extends React.Component {
                       this.setState({ activeIndex: index });
                     }}
                   />
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={DayStyle.TouchableOpacityStyle}
+                  >
+                    <Image
+                      source={require("./icons/AddButton.png")}
+                      style={DayStyle.FloatingButtonStyle}
+                    />
+                  </TouchableOpacity>
                 </View>
               );
             }}
@@ -249,3 +273,21 @@ export default class App extends React.Component {
     );
   }
 }
+
+const DayStyle = StyleSheet.create({
+  TouchableOpacityStyle: {
+    position: "absolute",
+    width: 65,
+    height: 65,
+    alignItems: "center",
+    justifyContent: "center",
+    bottom: 25,
+    right: 25,
+  },
+
+  FloatingButtonStyle: {
+    resizeMode: "contain",
+    width: 65,
+    height: 65,
+  },
+});

@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
+  StyleSheet,
 } from "react-native";
 import { AppContext } from "./ContextProvider";
 import tinycolor from "tinycolor2";
@@ -34,6 +35,12 @@ const Header = ({ header_color, left_icon, accent, status_bar }) => {
           >
             <View style={styles.text_row}>
               {left_icon}
+              <TouchableOpacity>
+                <Image
+                  style={headerStyles.image}
+                  source={require("../icons/Sidebar.png")}
+                />
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.center}
                 onPress={() =>
@@ -79,5 +86,14 @@ const Header = ({ header_color, left_icon, accent, status_bar }) => {
     </AppContext.Consumer>
   );
 };
+
+const headerStyles = StyleSheet.create({
+  image: {
+    marginLeft: 18,
+    flex: 0.35,
+    width: 20,
+    height: 10,
+  },
+});
 
 export default Header;

@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   center: {
-    paddingLeft: 10,
+    paddingLeft: 13,
     flexGrow: 1,
     flexDirection: "row",
     alignItems: "center",
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   month: {
     paddingTop: 10,
-    fontSize: 23,
+    fontSize: 25,
     paddingLeft: 10,
     fontWeight: "300",
   },
