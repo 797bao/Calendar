@@ -25,7 +25,11 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="DailyView">
         <Stack.Screen name="MonthlyView" component={MonthlyView} />
-        <Stack.Screen name="DailyView" component={DailyView} />
+        <Stack.Screen
+          name="DailyView"
+          component={DailyView}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="AddEventView" component={AddEventView} />
       </Stack.Navigator>
     </NavigationContainer>
