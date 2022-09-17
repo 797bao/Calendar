@@ -1,11 +1,11 @@
-import DrawnGrid from "./components/DrawnGrid";
-import TimeCol from "./components/TimeCol";
-import styles from "./components/styles";
-import NowBar from "./components/NowBar";
-import ScheduledData from "./components/ScheduledData";
-import SmartScroll from "./components/SmartScroll";
-import procData from "./services/procData";
-import Header from "./components/Header";
+import DrawnGrid from "./DrawnGrid";
+import TimeCol from "./TimeCol";
+import styles from "./styles";
+import NowBar from "./NowBar";
+import ScheduledData from "./ScheduledData";
+import SmartScroll from "./SmartScroll";
+import procData from "../services/procData";
+import Header from "./Header";
 
 import {
   Text,
@@ -17,11 +17,10 @@ import {
 } from "react-native";
 import { Dimensions } from "react-native";
 import Carousel from "react-native-snap-carousel";
-import { AppContext, ContextProvider } from "./components/ContextProvider";
+import { AppContext, ContextProvider } from "./ContextProvider";
 import { PropTypes } from "prop-types";
-import Colors from "./constants/colors";
+import Colors from "../constants/colors";
 import React, { useContext } from "react";
-import { SafeAreaInsetsContext } from "react-native-safe-area-context";
 
 /** the carousel loops through an array, swipe right = index++, swipe left = index--
 each swipe modifies the furthest looped index away from the current index instead of the next index
@@ -30,7 +29,6 @@ let carouselLength = 5; //keep minimum 5
 let carousel = [];
 let hourSize = Dimensions.get("window").height / 13.34;
 let dayView = new Date();
-let status_bar = PropTypes.bool;
 
 //supplying the carousel
 for (let i = 0; i < carouselLength; i++) {
@@ -52,14 +50,14 @@ for (let i = 0; i < carouselLength; i++) {
 //procData adds a new field -> height to offset bars determined by start/end time
 const loggedItems = new Map();
 loggedItems.set(
-  new Date(2022, 7, 30).toString(),
+  new Date(2022, 8, 14).toString(),
   procData(
     [
       {
         title: "TEST",
         subtitle: "",
-        start: new Date(2022, 7, 30, 2, 21),
-        end: new Date(2022, 7, 30, 4, 0),
+        start: new Date(2022, 8, 14, 2, 21),
+        end: new Date(2022, 8, 14, 4, 0),
         color: "#aa0000",
       },
     ],
@@ -68,28 +66,28 @@ loggedItems.set(
 );
 
 loggedItems.set(
-  new Date(2022, 8, 1).toString(),
+  new Date(2022, 8, 13).toString(),
   procData(
     [
       {
         title: "Lunch Appointment",
         subtitle: "With John",
-        start: new Date(2022, 8, 1, 1, 21),
-        end: new Date(2022, 8, 1, 7, 20),
+        start: new Date(2022, 8, 13, 1, 21),
+        end: new Date(2022, 8, 13, 7, 20),
         color: "#390099",
       },
       {
         title: "Lunch Appointment",
         subtitle: "With Bao",
-        start: new Date(2022, 8, 1, 3, 20),
-        end: new Date(2022, 8, 1, 7, 20),
+        start: new Date(2022, 8, 13, 3, 20),
+        end: new Date(2022, 8, 13, 7, 20),
         color: "#ff0000",
       },
       {
         title: "Lunch Appointment",
         subtitle: "With Bao",
-        start: new Date(2022, 8, 1, 4, 20),
-        end: new Date(2022, 8, 1, 5, 20),
+        start: new Date(2022, 8, 13, 4, 20),
+        end: new Date(2022, 8, 13, 5, 20),
         color: "#ffff00",
       },
     ],
@@ -148,7 +146,7 @@ function mod(n, m) {
   return ((n % m) + m) % m;
 }
 
-export default class App extends React.Component {
+export default class DailyView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -163,7 +161,7 @@ export default class App extends React.Component {
     return (
       <View
         style={{
-          backgroundColor: "floralwhite",
+          backgroundColor: "#fff",
           borderRadius: 5,
           height: Dimensions.get("screen").height * 0.85,
           padding: 0,
@@ -202,8 +200,8 @@ export default class App extends React.Component {
             accent={Colors.blue}
             left_icon={PropTypes.node}
             header_color={Colors.light_gray}
+            navigation={this.props.navigation}
           />
-
           <AppContext.Consumer>
             {(context) => {
               return (
@@ -249,12 +247,15 @@ export default class App extends React.Component {
                     }}
                   />
                   <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate("AddEventView")
+                    }
                     activeOpacity={0.5}
                     style={DayStyle.TouchableOpacityStyle}
                   >
                     <Image
-                      source={require("./icons/AddButton.png")}
-                      style={DayStyle.FloatingButtonStyle}
+                      source={require("../icons/AddButton.png")}
+                      style={DayStyle.TouchableOpacityStyle}
                     />
                   </TouchableOpacity>
                 </View>

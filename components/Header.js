@@ -13,7 +13,13 @@ import tinycolor from "tinycolor2";
 import styles from "./headerStyles";
 import moment from "moment";
 
-const Header = ({ header_color, left_icon, accent, status_bar }) => {
+const Header = ({
+  header_color,
+  left_icon,
+  accent,
+  status_bar,
+  navigation,
+}) => {
   var color1 = tinycolor(header_color);
   var text_color = color1.isDark() ? "#fff" : "#000";
   var accent_color = tinycolor(accent);
@@ -35,7 +41,9 @@ const Header = ({ header_color, left_icon, accent, status_bar }) => {
           >
             <View style={styles.text_row}>
               {left_icon}
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("MonthView")}
+              >
                 <Image
                   style={headerStyles.image}
                   source={require("../icons/Sidebar.png")}
