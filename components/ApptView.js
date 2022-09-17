@@ -1,5 +1,5 @@
-import React , { useRef } from 'react';
-import { Animated, View, ViewStyleSheet, PanResponder, Text, TouchableOpacity } from 'react-native';
+import React ,  { useRef, Component } from 'react';
+import { Animated, View, ViewStyleSheet, PanResponder, Text, TouchableOpacity, ScrollView } from 'react-native';
 import tinycolor from 'tinycolor2';
 import Colors from '../constants/colors';
 import {hrsToStart} from '../services/hrsToPx';
@@ -11,19 +11,21 @@ const ApptView = ({topTime, appt, hour_size, onEventPress}) => {
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        pan.setOffset({
-        
-          y: pan.y._value
-        });
+      onPanResponderGrant: (evt, gestureState) => {
+        pan.setOffset(
+         pan.__getValue()
+        );
+        pan.setValue({x: 0 , y: 0});
+      
       },
       onPanResponderMove: Animated.event(
         [
           null,
-          {dy: pan.y }
+          {dx: pan.x, dy: pan.y }
         ],
         {useNativeDriver: false}
       ),
+
       onPanResponderRelease: () => {
         pan.flattenOffset();
       }
