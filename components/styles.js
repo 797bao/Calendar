@@ -1,20 +1,20 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   hour_col: {
     width: 60,
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   schedule_col: {
-    flex: 1
+    flex: 1,
   },
   container: {
-    flex: 1
+    flex: 1,
   },
 });
 
-export default styles
+export default styles;

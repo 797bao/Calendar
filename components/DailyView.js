@@ -27,7 +27,8 @@ each swipe modifies the furthest looped index away from the current index instea
 to avoid values being potentially visually changed abruptly for a seamless experience */
 let carouselLength = 5; //keep minimum 5
 let carousel = [];
-let hourSize = Dimensions.get("window").height / 13.34;
+//let hourSize = Dimensions.get("window").height / 13.34;
+let hourSize = 69.41529235382309;
 let dayView = new Date();
 
 //supplying the carousel
@@ -76,6 +77,7 @@ loggedItems.set(
         end: new Date(2022, 8, 26, 7, 20),
         color: "#390099",
       },
+
       {
         title: "Lunch Appointment",
         subtitle: "With Bao",
@@ -139,9 +141,12 @@ function mod(n, m) {
   return ((n % m) + m) % m;
 }
 
+let dataItems;
+
 export default class DailyView extends React.Component {
   constructor(props) {
     super(props);
+    dataItems = this.props.route.params.loggedItems;
     this.state = {
       activeIndex: 0,
       carouselItems: carousel,
@@ -150,7 +155,10 @@ export default class DailyView extends React.Component {
 
   //the carousel's data to render
   _renderItem({ item, index }) {
-    let datesInMap = loggedItems.get(item.toString());
+    let datesInMap = dataItems.get(item.toString());
+    console.log("RENDER ITEM " + dataItems);
+    console.log("DATES IN MAP " + datesInMap);
+    console.log("DATES IN MAP " + JSON.stringify(datesInMap));
     return (
       <View
         style={{
@@ -170,7 +178,7 @@ export default class DailyView extends React.Component {
                 <DrawnGrid></DrawnGrid>
                 <NowBar hour_size={hourSize} />
                 {!!datesInMap && (
-                  <ScheduledData dataArray={loggedItems.get(item.toString())} />
+                  <ScheduledData dataArray={dataItems.get(item.toString())} />
                 )}
               </View>
             </View>
@@ -218,6 +226,8 @@ export default class DailyView extends React.Component {
                     itemWidth={Dimensions.get("screen").width}
                     renderItem={this._renderItem}
                     onBeforeSnapToItem={(index) => {
+                      console.log("SNAPPING BEFORE");
+                      console.log(dataItems);
                       if (index > this.state.activeIndex) {
                         if (
                           this.state.activeIndex == 0 &&
