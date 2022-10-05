@@ -10,9 +10,19 @@ import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+import {
+  ApplicationProvider,
+  BottomNavigation,
+  BottomNavigationTab,
+} from "@ui-kitten/components";
+
 let hourSize = Dimensions.get("window").height / 13.34;
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+
+import AllJournals from "./components/AllJournals";
+import CreateNote from "./components/CreateNote";
+import Note from "./components/Note";
 
 const loggedItems = new Map();
 loggedItems.set(
@@ -72,12 +82,9 @@ loggedItems.set(
 
 function JournalScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Button
-        title="Need to be merged with Thong & Gloria Journal's View"
-        onPress={() => console.log("testing")}
-      />
-    </View>
+    <NavigationContainer>
+      <TabNavigator />
+    </NavigationContainer>
   );
 }
 
@@ -113,6 +120,33 @@ function MetricsScreen({ navigation }) {
     </View>
   );
 }
+
+const BottomTabBar = ({ navigation, state }) => (
+  <BottomNavigation
+    selectedIndex={state.index}
+    onSelect={(index) => navigation.navigate(state.routeNames[index])}
+  >
+    <BottomNavigationTab title="Create" />
+    <BottomNavigationTab title="All Journals" />
+  </BottomNavigation>
+);
+
+const TabNavigator = () => (
+  <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
+    <Screen name="Create" component={CreateNote} />
+    <Screen name="AllJournals" component={AllJournals} />
+    <Screen name="Note" component={Note} />
+  </Navigator>
+);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
 
 export default function App() {
   return (
