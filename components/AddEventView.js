@@ -60,6 +60,7 @@ const AddEventView = (props) => {
     console.log("PROPS 2 " + newData);
     console.log("after " + props.route.params.loggedItems);
     console.log(props);
+    props.navigation.navigate("DailyView");
   };
 
   return (

@@ -8,13 +8,12 @@ import DailyView from "./components/DailyView";
 import AddEventView from "./components/AddEventView";
 import procData from "./services/procData";
 import { Dimensions } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 let hourSize = Dimensions.get("window").height / 13.34;
-console.log("H SIZE " + hourSize);
+const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-//all the scheduled items (bars) resides in a map, key = day, value = array of all values in that day
-//procData adds a new field -> height to offset bars determined by start/end time
 const loggedItems = new Map();
 loggedItems.set(
   new Date(2022, 8, 25).toString(),
@@ -71,32 +70,61 @@ loggedItems.set(
   )
 );
 
-function App() {
-  console.log("TEST LOGGED ITEMS");
-  //console.log(loggedItems.get(new Date(2022, 8, 26).toString()));
-  console.log("init " + loggedItems);
-
+function JournalScreen({ navigation }) {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="DailyView">
-        <Stack.Screen name="MonthlyView" component={MonthlyView} />
-        <Stack.Screen
-          name="DailyView"
-          props={loggedItems}
-          component={DailyView}
-          options={{ headerShown: false }}
-          initialParams={{ loggedItems: loggedItems }}
-        />
-        {(props) => <DailyView {...props} loggedItems={loggedItems} />}
-        <Stack.Screen
-          name="AddEventView"
-          component={AddEventView}
-          initialParams={{ loggedItems: loggedItems }}
-        />
-        {(props) => <DailyView {...props} loggedItems={loggedItems} />}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Button
+        title="Need to be merged with Thong & Gloria Journal's View"
+        onPress={() => console.log("testing")}
+      />
+    </View>
   );
 }
 
-export default App;
+function CalendarScreen() {
+  return (
+    <Stack.Navigator initialRouteName="DailyView">
+      <Stack.Screen name="MonthlyView" component={MonthlyView} />
+      <Stack.Screen
+        name="DailyView"
+        props={loggedItems}
+        component={DailyView}
+        options={{ headerShown: false }}
+        initialParams={{ loggedItems: loggedItems }}
+      />
+      {(props) => <DailyView {...props} loggedItems={loggedItems} />}
+      <Stack.Screen
+        name="AddEventView"
+        component={AddEventView}
+        initialParams={{ loggedItems: loggedItems }}
+      />
+      {(props) => <DailyView {...props} loggedItems={loggedItems} />}
+    </Stack.Navigator>
+  );
+}
+
+function MetricsScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Button
+        title="Metrics Screen Work In Progress"
+        onPress={() => console.log("placeholder")}
+      />
+    </View>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        initialRouteName="Calendar"
+        screenOptions={{ headerShown: false }}
+      >
+        <Tab.Screen name="Journal" component={JournalScreen} />
+        <Tab.Screen name="Calendar" component={CalendarScreen} />
+        <Tab.Screen name="Metrics" component={MetricsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
