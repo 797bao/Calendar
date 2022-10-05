@@ -10,6 +10,16 @@ import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+//import * as eva from "@eva-design/eva"
+import {
+  ApplicationProvider,
+  BottomNavigation,
+  BottomNavigationTab,
+} from "@ui-kitten/components";
+import AllJournals from "./components/AllJournals";
+import CreateNote from "./components/CreateNote";
+import Note from "./components/Note";
+
 let hourSize = Dimensions.get("window").height / 13.34;
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
