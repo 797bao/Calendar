@@ -1,39 +1,45 @@
-import * as React from "react";
-import { Button, View, Text } from "react-native";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as eva from "@eva-design/eva"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { NavigationContainer } from "@react-navigation/native"
+import { ApplicationProvider, BottomNavigation, BottomNavigationTab } from "@ui-kitten/components"
+import React from "react"
+import { StyleSheet } from "react-native"
+import AllJournals from "./components/AllJournals"
+import CreateNote from "./components/CreateNote"
+import Note from "./components/Note"
 
-import MonthlyView from "./components/MonthlyView";
-import DailyView from "./components/DailyView";
-import AddEventView from "./components/AddEventView";
+const { Navigator, Screen } = createBottomTabNavigator()
 
-const Stack = createNativeStackNavigator();
-/** 
-import { useNavigation } from "@react-navigation/native";
+const BottomTabBar = ({ navigation, state }) => (
+    <BottomNavigation selectedIndex={state.index} onSelect={(index) => navigation.navigate(state.routeNames[index])}>
+        <BottomNavigationTab title="Create" />
+        <BottomNavigationTab title="All Notes" />
+    </BottomNavigation>
+)
 
+const TabNavigator = () => (
+    <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
+        <Screen name="Create" component={CreateNote} />
+        <Screen name="AllJournals" component={AllJournals} />
+        <Screen name="Note" component={Note} />
+    </Navigator>
+)
 
-const n = useNavigation();
-
-function navigation() {
-  return n;
+export default function App() {
+    return (
+        <ApplicationProvider {...eva} theme={eva.dark}>
+            <NavigationContainer>
+                <TabNavigator />
+            </NavigationContainer>
+        </ApplicationProvider>
+    )
 }
-*/
 
-function App() {
-  //const n = useNavigation();
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="DailyView">
-        <Stack.Screen name="MonthlyView" component={MonthlyView} />
-        <Stack.Screen
-          name="DailyView"
-          component={DailyView}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="AddEventView" component={AddEventView} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
-export default App;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center"
+    }
+})
