@@ -10,15 +10,21 @@ import {
 //import NativeColorPicker from 'native-color-picker';
 import ColorPalette from "react-native-color-palette";
 import { Button } from "react-native-paper";
+import procData from "../services/procData";
+import { Dimensions } from "react-native";
+let hourSize = Dimensions.get("window").height / 13.34;
 
 const colors = ["#C0392B", "#E74C3C", "#9B59B6", "#8E44AD", "#2980B9"];
 
-const AddEventView = () => {
+const AddEventView = (props) => {
   const [chosenStartDate, setChosenStartDate] = useState(new Date());
   const [chosenEndDate, setChosenEndDate] = useState(new Date());
   const [title, onChangeTitle] = React.useState("Event");
   const [subtitle, onChangeSubtitle] = React.useState("Subtitle");
   const [color, setSelectedColor] = useState("#C0392B");
+
+  let dateKey = new Date(chosenStartDate);
+  dateKey.setHours(0, 0, 0, 0);
 
   const onClickHandler = () => {
     //TODO: Add event to calendar
@@ -27,6 +33,48 @@ const AddEventView = () => {
     console.log("Color: " + color);
     console.log("Start Date: " + chosenStartDate);
     console.log("End Date: " + chosenEndDate);
+
+    let newData = {
+      title: title,
+      subtitle: subtitle,
+      start: chosenStartDate,
+      end: chosenEndDate,
+      color: color,
+    };
+
+    /** 
+    //this map has no entry for this day
+    if (
+      props.route.params.loggedData.get(chosenStartDate.toString()) == null
+    ) {
+      console.log("no entry add new entry");
+      props.route.params.loggedData.set(
+        //add new entry
+
+        chosenStartDate.toString(),
+        procData([newData], hourSize)
+      );
+    } else {
+      console.log("push new entry");
+      //push new entry to existing array
+      props.route.params.loggedData
+        .get(chosenStartDate.toString())
+        .push(newData);
+    }
+
+
+    console.log("PROPS 2 " + newData);
+    console.log("after " + props.route.params.loggedData);
+    console.log(props);
+    console.log("------------------------");
+    console.log(props.route.params.test);
+    console.log("------------------------");
+        */
+
+    props.route.params.updateData(dateKey, newData);
+    props.navigation.navigate("DailyView", {
+      data: props.route.params.loggedData,
+    });
   };
 
   return (

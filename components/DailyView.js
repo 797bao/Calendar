@@ -48,68 +48,6 @@ for (let i = 0; i < carouselLength; i++) {
 
 //all the scheduled items (bars) resides in a map, key = day, value = array of all values in that day
 //procData adds a new field -> height to offset bars determined by start/end time
-const loggedItems = new Map();
-loggedItems.set(
-  new Date(2022, 8, 14).toString(),
-  procData(
-    [
-      {
-        title: "TEST",
-        subtitle: "",
-        start: new Date(2022, 8, 14, 2, 21),
-        end: new Date(2022, 8, 14, 4, 0),
-        color: "#aa0000",
-      },
-    ],
-    hourSize
-  )
-);
-
-loggedItems.set(
-  new Date(2022, 8, 13).toString(),
-  procData(
-    [
-      {
-        title: "Lunch Appointment",
-        subtitle: "With John",
-        start: new Date(2022, 8, 13, 1, 21),
-        end: new Date(2022, 8, 13, 7, 20),
-        color: "#390099",
-      },
-      {
-        title: "Lunch Appointment",
-        subtitle: "With Bao",
-        start: new Date(2022, 8, 13, 3, 20),
-        end: new Date(2022, 8, 13, 7, 20),
-        color: "#ff0000",
-      },
-      {
-        title: "Lunch Appointment",
-        subtitle: "With Bao",
-        start: new Date(2022, 8, 13, 4, 20),
-        end: new Date(2022, 8, 13, 5, 20),
-        color: "#ffff00",
-      },
-    ],
-    hourSize
-  )
-);
-
-loggedItems.set(
-  new Date(2022, 7, 31).toString(),
-  procData(
-    [
-      {
-        title: "Lunch Appointment",
-        subtitle: "With John",
-        start: new Date(2022, 7, 31, 1, 21),
-        end: new Date(2022, 7, 31, 6, 0),
-        color: "#ff0000",
-      },
-    ],
-    hourSize
-  )
-);
 
 //shifts content of the carousel 1 day forward by changing the earliest day to the latest day + 1
 function appendToList(index) {
@@ -151,7 +89,10 @@ let dataItems;
 export default class DailyView extends React.Component {
   constructor(props) {
     super(props);
-    dataItems = this.props.route.params.loggedItems;
+    console.log("SUPER ");
+
+    dataItems = this.props.route.params.loggedData;
+    console.log(dataItems);
     this.state = {
       activeIndex: 0,
       carouselItems: carousel,
@@ -162,6 +103,8 @@ export default class DailyView extends React.Component {
   _renderItem({ item, index }) {
     //let datesInMap = loggedItems.get(item.toString());
     let datesInMap = dataItems.get(item.toString());
+    console.log(JSON.stringify(datesInMap));
+    console.log(" TEST  " + !!datesInMap);
     return (
       <View
         style={{
@@ -230,6 +173,7 @@ export default class DailyView extends React.Component {
                     itemWidth={Dimensions.get("screen").width}
                     renderItem={this._renderItem}
                     onBeforeSnapToItem={(index) => {
+                      console.log("BEFORE SNAPPING ");
                       if (index > this.state.activeIndex) {
                         if (
                           this.state.activeIndex == 0 &&

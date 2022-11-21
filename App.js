@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { Button, View, Text } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -27,16 +28,24 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const loggedItems = new Map();
+
 loggedItems.set(
   new Date(2022, 10, 20).toString(),
   procData(
     [
       {
         title: "TEST",
-        subtitle: "",
+        subtitle: "TEST",
         start: new Date(2022, 10, 20, 2, 21),
         end: new Date(2022, 10, 20, 4, 0),
         color: "#aa0000",
+      },
+      {
+        title: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+        subtitle: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+        start: new Date(2022, 10, 20, 8, 21),
+        end: new Date(2022, 10, 20, 12, 20),
+        color: "#390099",
       },
     ],
     hourSize
@@ -53,29 +62,6 @@ loggedItems.set(
         start: new Date(2022, 10, 21, 1, 21),
         end: new Date(2022, 10, 21, 7, 20),
         color: "#390099",
-      },
-      {
-        title: "Lunch Appointment",
-        subtitle: "With Bao",
-        start: new Date(2022, 10, 21, 4, 20),
-        end: new Date(2022, 10, 21, 5, 20),
-        color: "#ffff00",
-      },
-    ],
-    hourSize
-  )
-);
-
-loggedItems.set(
-  new Date(2022, 10, 28).toString(),
-  procData(
-    [
-      {
-        title: "Lunch Appointment",
-        subtitle: "With John",
-        start: new Date(2022, 10, 28, 1, 21),
-        end: new Date(2022, 10, 28, 6, 0),
-        color: "#ff0000",
       },
     ],
     hourSize
@@ -110,28 +96,6 @@ function JournalScreen({ navigation }) {
   );
 }
 
-function CalendarScreen() {
-  return (
-    <Stack.Navigator initialRouteName="DailyView">
-      <Stack.Screen name="MonthlyView" component={MonthlyView} />
-      <Stack.Screen
-        name="DailyView"
-        props={loggedItems}
-        component={DailyView}
-        options={{ headerShown: false }}
-        initialParams={{ loggedItems: loggedItems }}
-      />
-      {(props) => <DailyView {...props} loggedItems={loggedItems} />}
-      <Stack.Screen
-        name="AddEventView"
-        component={AddEventView}
-        initialParams={{ loggedItems: loggedItems }}
-      />
-      {(props) => <DailyView {...props} loggedItems={loggedItems} />}
-    </Stack.Navigator>
-  );
-}
-
 function MetricsScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -143,7 +107,249 @@ function MetricsScreen({ navigation }) {
   );
 }
 
+let test = "Test";
+
+/** 
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.updateItems = this.updateItems.bind(this);
+  }
+
+  updateItems(data) {
+    loggedItems = data;
+  }
+
+  render() {
+    return (
+      <NavigationContainer>
+        <Tab.Navigator
+          initialRouteName="Calendar"
+          screenOptions={{ headerShown: false }}
+        >
+          <Tab.Screen name="Journal" component={JournalScreen} />
+          <Tab.Screen
+            name="Calendar"
+            component={function CalendarScreen() {
+              return (
+                <Stack.Navigator initialRouteName="DailyView">
+                  <Stack.Screen name="MonthlyView" component={MonthlyView} />
+
+                  <Stack.Screen
+                    name="DailyView"
+                    props={loggedItems}
+                    component={DailyView}
+                    options={{ headerShown: false }}
+                    initialParams={{ loggedData: loggedItems }}
+                  />
+                  <Stack.Screen
+                    name="AddEventView"
+                    //props={loggedItems}
+                    component={AddEventView}
+                    initialParams={{
+                      loggedData: loggedItems,
+                      test: test,
+                      updateData: callbackFunction,
+                    }}
+                  />
+                  {(props) => (
+                    <AddEventView {...props} loggedItems={loggedItems} />
+                  )}
+                </Stack.Navigator>
+              );
+            }}
+          />
+          <Tab.Screen name="Metrics" component={MetricsScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
+  }
+}
+*/
+
+/** 
+let callbackFunction = (chosenStartDate, childData) => {
+  const [logs, setLog] = useState(loggedItems);
+  console.log("CALLBACK");
+
+  if (loggedItems.get(chosenStartDate) == null) {
+    //if the data doesn't exist
+    //create a new entry for that date and push the data
+    loggedItems.set(
+      chosenStartDate.toString(),
+      procData([childData], hourSize)
+    );
+  } else {
+    loggedItems
+      .get(chosenStartDate.toString())
+      .push(procData([childData], hourSize));
+  }
+
+  //setLog(loggedItems);
+  console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
+  console.log(loggedItems);
+  console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
+};
+*/
+
 export default function App() {
+  const [log, setLog] = useState(loggedItems);
+
+  const callbackFunction = (chosenStartDate, childData) => {
+    console.log("CALLBACK ");
+    console.log(" ");
+    console.log(chosenStartDate);
+    console.log(" ");
+
+    if (loggedItems.get(chosenStartDate.toString()) == null) {
+      //if the data doesn't exist
+      //create a new entry for that date and push the data
+      loggedItems.set(
+        chosenStartDate.toString(),
+        procData([childData], hourSize)
+      );
+    } else {
+      loggedItems
+        .get(chosenStartDate.toString())
+        .push(procData([childData], hourSize)[0]);
+    }
+
+    setLog(loggedItems);
+
+    console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
+    console.log(log);
+    console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
+  };
+
+  console.log("MAIN --------------------------------");
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        initialRouteName="Calendar"
+        screenOptions={{ headerShown: false }}
+      >
+        <Tab.Screen name="Journal" component={JournalScreen} />
+        <Tab.Screen
+          name="Calendar"
+          component={function CalendarScreen() {
+            return (
+              <Stack.Navigator initialRouteName="DailyView">
+                <Stack.Screen name="MonthlyView" component={MonthlyView} />
+
+                <Stack.Screen
+                  name="DailyView"
+                  props={loggedItems}
+                  component={DailyView}
+                  options={{ headerShown: false }}
+                  initialParams={{ loggedData: log }}
+                />
+                <Stack.Screen
+                  name="AddEventView"
+                  //props={loggedItems}
+                  component={AddEventView}
+                  initialParams={{
+                    loggedData: log,
+                    test: test,
+                    updateData: callbackFunction,
+                  }}
+                />
+                {(props) => (
+                  <AddEventView {...props} loggedItems={loggedItems} />
+                )}
+              </Stack.Navigator>
+            );
+          }}
+        />
+        <Tab.Screen name="Metrics" component={MetricsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+
+/**
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.updateItems = this.updateItems.bind(this);
+  }
+
+  updateItems(data) {
+    loggedItems = data;
+  }
+
+  callbackFunction = (chosenStartDate, childData) => {
+    const [logs, setLog] = useState(loggedItems);
+    console.log("CALLBACK");
+
+    if (loggedItems.get(chosenStartDate) == null) {
+      //if the data doesn't exist
+      //create a new entry for that date and push the data
+      loggedItems.set(
+        chosenStartDate.toString(),
+        procData([childData], hourSize)
+      );
+    } else {
+      loggedItems
+        .get(chosenStartDate.toString())
+        .push(procData([childData], hourSize));
+    }
+
+    //setLog(loggedItems);
+    console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
+    console.log(loggedItems);
+    console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
+  };
+
+  render() {
+    return (
+      <NavigationContainer>
+        <Tab.Navigator
+          initialRouteName="Calendar"
+          screenOptions={{ headerShown: false }}
+        >
+          <Tab.Screen name="Journal" component={JournalScreen} />
+          <Tab.Screen
+            name="Calendar"
+            component={function CalendarScreen() {
+              return (
+                <Stack.Navigator initialRouteName="DailyView">
+                  <Stack.Screen name="MonthlyView" component={MonthlyView} />
+
+                  <Stack.Screen
+                    name="DailyView"
+                    props={loggedItems}
+                    component={DailyView}
+                    options={{ headerShown: false }}
+                    initialParams={{ loggedData: loggedItems }}
+                  />
+                  <Stack.Screen
+                    name="AddEventView"
+                    //props={loggedItems}
+                    component={AddEventView}
+                    initialParams={{
+                      loggedData: loggedItems,
+                      test: test,
+                      updateData: callbackFunction,
+                    }}
+                  />
+                  {(props) => (
+                    <AddEventView {...props} loggedItems={loggedItems} />
+                  )}
+                </Stack.Navigator>
+              );
+            }}
+          />
+          <Tab.Screen name="Metrics" component={MetricsScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
+  }
+}
+ */
+
+/**
+export default function App() {
+  //const [data, setData] = useState("data");
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -157,3 +363,4 @@ export default function App() {
     </NavigationContainer>
   );
 }
+ */
