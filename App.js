@@ -28,14 +28,14 @@ const Stack = createNativeStackNavigator();
 
 const loggedItems = new Map();
 loggedItems.set(
-  new Date(2022, 8, 25).toString(),
+  new Date(2022, 10, 20).toString(),
   procData(
     [
       {
         title: "TEST",
         subtitle: "",
-        start: new Date(2022, 8, 25, 2, 21),
-        end: new Date(2022, 8, 25, 4, 0),
+        start: new Date(2022, 10, 20, 2, 21),
+        end: new Date(2022, 10, 20, 4, 0),
         color: "#aa0000",
       },
     ],
@@ -44,21 +44,21 @@ loggedItems.set(
 );
 
 loggedItems.set(
-  new Date(2022, 8, 26).toString(),
+  new Date(2022, 10, 21).toString(),
   procData(
     [
       {
         title: "Lunch Appointment",
         subtitle: "With John",
-        start: new Date(2022, 8, 26, 1, 21),
-        end: new Date(2022, 8, 26, 7, 20),
+        start: new Date(2022, 10, 21, 1, 21),
+        end: new Date(2022, 10, 21, 7, 20),
         color: "#390099",
       },
       {
         title: "Lunch Appointment",
         subtitle: "With Bao",
-        start: new Date(2022, 8, 26, 4, 20),
-        end: new Date(2022, 8, 26, 5, 20),
+        start: new Date(2022, 10, 21, 4, 20),
+        end: new Date(2022, 10, 21, 5, 20),
         color: "#ffff00",
       },
     ],
@@ -67,14 +67,14 @@ loggedItems.set(
 );
 
 loggedItems.set(
-  new Date(2022, 8, 28).toString(),
+  new Date(2022, 10, 28).toString(),
   procData(
     [
       {
         title: "Lunch Appointment",
         subtitle: "With John",
-        start: new Date(2022, 8, 28, 1, 21),
-        end: new Date(2022, 8, 28, 6, 0),
+        start: new Date(2022, 10, 28, 1, 21),
+        end: new Date(2022, 10, 28, 6, 0),
         color: "#ff0000",
       },
     ],

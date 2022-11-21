@@ -146,9 +146,12 @@ function mod(n, m) {
   return ((n % m) + m) % m;
 }
 
+let dataItems;
+
 export default class DailyView extends React.Component {
   constructor(props) {
     super(props);
+    dataItems = this.props.route.params.loggedItems;
     this.state = {
       activeIndex: 0,
       carouselItems: carousel,
@@ -157,7 +160,8 @@ export default class DailyView extends React.Component {
 
   //the carousel's data to render
   _renderItem({ item, index }) {
-    let datesInMap = loggedItems.get(item.toString());
+    //let datesInMap = loggedItems.get(item.toString());
+    let datesInMap = dataItems.get(item.toString());
     return (
       <View
         style={{
@@ -177,7 +181,8 @@ export default class DailyView extends React.Component {
                 <DrawnGrid></DrawnGrid>
                 <NowBar hour_size={hourSize} />
                 {!!datesInMap && (
-                  <ScheduledData dataArray={loggedItems.get(item.toString())} />
+                  //<ScheduledData dataArray={dataItems.get(item.toString())} />
+                  <ScheduledData dataArray={dataItems.get(item.toString())} />
                 )}
               </View>
             </View>
