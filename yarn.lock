@@ -64,7 +64,7 @@
   dependencies:
     "@babel/types" "^7.18.2"
     "@jridgewell/gen-mapping" "^0.3.0"
-    "jsesc" "^2.5.1"
+    ""jsesc"" "^2.5.1"
 
 "@babel/helper-annotate-as-pure@^7.16.7":
   "integrity" "sha512-s6t2w/IPQVTAET1HitoowRGXooX8mCgtuP5195wD/QJPV6wYjpujCGF7JuMODVX2ZAJOf1GT6DT9MHEZvLOFSw=="
@@ -309,6 +309,14 @@
   dependencies:
     "@babel/helper-create-class-features-plugin" "^7.17.12"
     "@babel/helper-plugin-utils" "^7.17.12"
+
+"@babel/plugin-proposal-class-properties@^7.12.13", "@babel/plugin-proposal-class-properties@~7.12.13":
+  "integrity" "sha512-8SCJ0Ddrpwv4T7Gwb33EmW1V9PY5lggTO+A8WjyIwxrSHDUyBw4MtF96ifn1n8H806YlxbVCoKXbbmzD6RD+cA=="
+  "resolved" "https://registry.npmjs.org/@babel/plugin-proposal-class-properties/-/plugin-proposal-class-properties-7.12.13.tgz"
+  "version" "7.12.13"
+  dependencies:
+    "@babel/helper-create-class-features-plugin" "^7.12.13"
+    "@babel/helper-plugin-utils" "^7.12.13"
 
 "@babel/plugin-proposal-class-static-block@^7.18.0":
   "integrity" "sha512-t+8LsRMMDE74c6sV7KShIw13sqbqd58tlqNrsWoWBTIMw7SVQ0cZ905wLNS/FBCy/3PyooRHLFFlfrUNyyz5lA=="
@@ -1010,6 +1018,15 @@
     "@babel/helper-plugin-utils" "^7.17.12"
     "@babel/helper-validator-option" "^7.16.7"
     "@babel/plugin-transform-typescript" "^7.17.12"
+
+"@babel/preset-typescript@~7.12.13":
+  "integrity" "sha512-T513uT4VSThRcmWeqcLkITKJ1oGQho9wfWuhQm10paClQkp1qyd0Wf8mvC8Se7UYssMyRSj4tZYpVTkCmAK/mA=="
+  "resolved" "https://registry.npmjs.org/@babel/preset-typescript/-/preset-typescript-7.12.17.tgz"
+  "version" "7.12.17"
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.12.13"
+    "@babel/helper-validator-option" "^7.12.17"
+    "@babel/plugin-transform-typescript" "^7.12.17"
 
 "@babel/register@^7.13.16":
   "integrity" "sha512-fg56SwvXRifootQEDQAu1mKdjh5uthPzdO0N6t358FktfL4XjAVXuH58ULoiW8mesxiOgNIrxiImqEwv0+hRRA=="
