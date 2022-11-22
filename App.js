@@ -109,89 +109,6 @@ function MetricsScreen({ navigation }) {
 
 let test = "Test";
 
-/** 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.updateItems = this.updateItems.bind(this);
-  }
-
-  updateItems(data) {
-    loggedItems = data;
-  }
-
-  render() {
-    return (
-      <NavigationContainer>
-        <Tab.Navigator
-          initialRouteName="Calendar"
-          screenOptions={{ headerShown: false }}
-        >
-          <Tab.Screen name="Journal" component={JournalScreen} />
-          <Tab.Screen
-            name="Calendar"
-            component={function CalendarScreen() {
-              return (
-                <Stack.Navigator initialRouteName="DailyView">
-                  <Stack.Screen name="MonthlyView" component={MonthlyView} />
-
-                  <Stack.Screen
-                    name="DailyView"
-                    props={loggedItems}
-                    component={DailyView}
-                    options={{ headerShown: false }}
-                    initialParams={{ loggedData: loggedItems }}
-                  />
-                  <Stack.Screen
-                    name="AddEventView"
-                    //props={loggedItems}
-                    component={AddEventView}
-                    initialParams={{
-                      loggedData: loggedItems,
-                      test: test,
-                      updateData: callbackFunction,
-                    }}
-                  />
-                  {(props) => (
-                    <AddEventView {...props} loggedItems={loggedItems} />
-                  )}
-                </Stack.Navigator>
-              );
-            }}
-          />
-          <Tab.Screen name="Metrics" component={MetricsScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    );
-  }
-}
-*/
-
-/** 
-let callbackFunction = (chosenStartDate, childData) => {
-  const [logs, setLog] = useState(loggedItems);
-  console.log("CALLBACK");
-
-  if (loggedItems.get(chosenStartDate) == null) {
-    //if the data doesn't exist
-    //create a new entry for that date and push the data
-    loggedItems.set(
-      chosenStartDate.toString(),
-      procData([childData], hourSize)
-    );
-  } else {
-    loggedItems
-      .get(chosenStartDate.toString())
-      .push(procData([childData], hourSize));
-  }
-
-  //setLog(loggedItems);
-  console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
-  console.log(loggedItems);
-  console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
-};
-*/
-
 export default function App() {
   const [log, setLog] = useState(loggedItems);
 
@@ -215,13 +132,8 @@ export default function App() {
     }
 
     setLog(loggedItems);
-
-    console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
-    console.log(log);
-    console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
   };
 
-  console.log("MAIN --------------------------------");
   return (
     <NavigationContainer>
       <Tab.Navigator
@@ -238,14 +150,12 @@ export default function App() {
 
                 <Stack.Screen
                   name="DailyView"
-                  props={loggedItems}
                   component={DailyView}
                   options={{ headerShown: false }}
                   initialParams={{ loggedData: log }}
                 />
                 <Stack.Screen
                   name="AddEventView"
-                  //props={loggedItems}
                   component={AddEventView}
                   initialParams={{
                     loggedData: log,
@@ -265,102 +175,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-/**
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.updateItems = this.updateItems.bind(this);
-  }
-
-  updateItems(data) {
-    loggedItems = data;
-  }
-
-  callbackFunction = (chosenStartDate, childData) => {
-    const [logs, setLog] = useState(loggedItems);
-    console.log("CALLBACK");
-
-    if (loggedItems.get(chosenStartDate) == null) {
-      //if the data doesn't exist
-      //create a new entry for that date and push the data
-      loggedItems.set(
-        chosenStartDate.toString(),
-        procData([childData], hourSize)
-      );
-    } else {
-      loggedItems
-        .get(chosenStartDate.toString())
-        .push(procData([childData], hourSize));
-    }
-
-    //setLog(loggedItems);
-    console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
-    console.log(loggedItems);
-    console.log("LOGGD ITEMS AFT#ER R - - - - -  -- ");
-  };
-
-  render() {
-    return (
-      <NavigationContainer>
-        <Tab.Navigator
-          initialRouteName="Calendar"
-          screenOptions={{ headerShown: false }}
-        >
-          <Tab.Screen name="Journal" component={JournalScreen} />
-          <Tab.Screen
-            name="Calendar"
-            component={function CalendarScreen() {
-              return (
-                <Stack.Navigator initialRouteName="DailyView">
-                  <Stack.Screen name="MonthlyView" component={MonthlyView} />
-
-                  <Stack.Screen
-                    name="DailyView"
-                    props={loggedItems}
-                    component={DailyView}
-                    options={{ headerShown: false }}
-                    initialParams={{ loggedData: loggedItems }}
-                  />
-                  <Stack.Screen
-                    name="AddEventView"
-                    //props={loggedItems}
-                    component={AddEventView}
-                    initialParams={{
-                      loggedData: loggedItems,
-                      test: test,
-                      updateData: callbackFunction,
-                    }}
-                  />
-                  {(props) => (
-                    <AddEventView {...props} loggedItems={loggedItems} />
-                  )}
-                </Stack.Navigator>
-              );
-            }}
-          />
-          <Tab.Screen name="Metrics" component={MetricsScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    );
-  }
-}
- */
-
-/**
-export default function App() {
-  //const [data, setData] = useState("data");
-  return (
-    <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName="Calendar"
-        screenOptions={{ headerShown: false }}
-      >
-        <Tab.Screen name="Journal" component={JournalScreen} />
-        <Tab.Screen name="Calendar" component={CalendarScreen} />
-        <Tab.Screen name="Metrics" component={MetricsScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
-}
- */
