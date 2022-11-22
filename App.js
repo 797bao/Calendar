@@ -10,6 +10,7 @@ import AddEventView from "./components/AddEventView";
 import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Chart } from "react-google-charts";
 
 import * as eva from "@eva-design/eva";
 import {
@@ -20,6 +21,7 @@ import {
 import AllJournals from "./components/AllJournals";
 import CreateNote from "./components/CreateNote";
 import Note from "./components/Note";
+import { WebView } from "react-native-webview";
 
 let hourSize = Dimensions.get("window").height / 13.34;
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -96,6 +98,40 @@ function JournalScreen({ navigation }) {
   );
 }
 
+export const data = [
+  ["City", "2010 Population", "2000 Population"],
+  ["New York City, NY", 8175000, 8008000],
+  ["Los Angeles, CA", 3792000, 3694000],
+  ["Chicago, IL", 2695000, 2896000],
+  ["Houston, TX", 2099000, 1953000],
+  ["Philadelphia, PA", 1526000, 1517000],
+];
+
+export const options = {
+  title: "Population of Largest U.S. Cities",
+  chartArea: { width: "50%" },
+  hAxis: {
+    title: "Total Population",
+    minValue: 0,
+  },
+  vAxis: {
+    title: "City",
+  },
+};
+
+function MetricsScreen({ navigation }) {
+  return (
+    <Chart
+      chartType="BarChart"
+      width="100%"
+      height="400px"
+      data={data}
+      options={options}
+    />
+  );
+}
+
+/** 
 function MetricsScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -106,6 +142,7 @@ function MetricsScreen({ navigation }) {
     </View>
   );
 }
+*/
 
 let test = "Test";
 
