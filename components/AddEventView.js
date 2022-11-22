@@ -27,13 +27,6 @@ const AddEventView = (props) => {
   dateKey.setHours(0, 0, 0, 0);
 
   const onClickHandler = () => {
-    //TODO: Add event to calendar
-    console.log("Title: " + title);
-    console.log("Subtitle: " + subtitle);
-    console.log("Color: " + color);
-    console.log("Start Date: " + chosenStartDate);
-    console.log("End Date: " + chosenEndDate);
-
     let newData = {
       title: title,
       subtitle: subtitle,
@@ -41,35 +34,6 @@ const AddEventView = (props) => {
       end: chosenEndDate,
       color: color,
     };
-
-    /** 
-    //this map has no entry for this day
-    if (
-      props.route.params.loggedData.get(chosenStartDate.toString()) == null
-    ) {
-      console.log("no entry add new entry");
-      props.route.params.loggedData.set(
-        //add new entry
-
-        chosenStartDate.toString(),
-        procData([newData], hourSize)
-      );
-    } else {
-      console.log("push new entry");
-      //push new entry to existing array
-      props.route.params.loggedData
-        .get(chosenStartDate.toString())
-        .push(newData);
-    }
-
-
-    console.log("PROPS 2 " + newData);
-    console.log("after " + props.route.params.loggedData);
-    console.log(props);
-    console.log("------------------------");
-    console.log(props.route.params.test);
-    console.log("------------------------");
-        */
 
     props.route.params.updateData(dateKey, newData);
     props.navigation.navigate("DailyView", {
