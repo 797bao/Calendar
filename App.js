@@ -10,7 +10,6 @@ import AddEventView from "./components/AddEventView";
 import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Chart } from "react-google-charts";
 
 import * as eva from "@eva-design/eva";
 import {
@@ -21,7 +20,7 @@ import {
 import AllJournals from "./components/AllJournals";
 import CreateNote from "./components/CreateNote";
 import Note from "./components/Note";
-import { WebView } from "react-native-webview";
+import { StackedBarChart, Grid } from "react-native-svg-charts";
 
 let hourSize = Dimensions.get("window").height / 13.34;
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -98,42 +97,64 @@ function JournalScreen({ navigation }) {
   );
 }
 
-export const data = [
-  ["City", "2010 Population", "2000 Population"],
-  ["New York City, NY", 8175000, 8008000],
-  ["Los Angeles, CA", 3792000, 3694000],
-  ["Chicago, IL", 2695000, 2896000],
-  ["Houston, TX", 2099000, 1953000],
-  ["Philadelphia, PA", 1526000, 1517000],
+const data = [
+  {
+    month: new Date(2015, 0, 1),
+    apples: 2,
+    bananas: 2,
+    cherries: 1,
+    dates: 1,
+  },
+  {
+    month: new Date(2015, 1, 1),
+    apples: 2,
+    bananas: 2,
+    cherries: 2,
+    dates: 2,
+  },
+  {
+    month: new Date(2015, 2, 1),
+    apples: 2,
+    bananas: 2,
+    cherries: 2,
+    dates: 2,
+  },
+  {
+    month: new Date(2015, 3, 1),
+    apples: 2,
+    bananas: 2,
+    cherries: 2,
+    dates: 2,
+  },
 ];
 
-export const options = {
-  title: "Population of Largest U.S. Cities",
-  chartArea: { width: "50%" },
-  hAxis: {
-    title: "Total Population",
-    minValue: 0,
-  },
-  vAxis: {
-    title: "City",
-  },
-};
+const colors = ["#7b4173", "#a55194", "#ce6dbd", "#de9ed6"];
+const keys = ["apples", "bananas", "cherries", "dates"];
 
 function MetricsScreen({ navigation }) {
   return (
-    <Chart
-      chartType="BarChart"
-      width="100%"
-      height="400px"
-      data={data}
-      options={options}
-    />
+    <View>
+      <StackedBarChart
+        style={{ height: 300 }}
+        keys={keys}
+        colors={colors}
+        horizontal={true}
+        numberOfTicks={10}
+        data={data}
+        showGrid={true}
+        contentInset={{ top: 100, bottom: 100, left: 20, right: 20 }}
+      >
+        <Grid direction={Grid.Direction.VERTICAL} />
+      </StackedBarChart>
+    </View>
   );
 }
 
 /** 
 function MetricsScreen({ navigation }) {
   return (
+
+    
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Button
         title="Metrics Screen Work In Progress"
