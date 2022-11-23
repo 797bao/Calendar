@@ -28,9 +28,8 @@
     "moment": "^2.29.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-google-charts": "^4.0.0",
     "react-native": "0.68.2",
-    "react-native-chart-kit": "^6.12.0",
+    "react-native-charts-wrapper": "^0.5.11",
     "react-native-color-palette": "^2.2.0",
     "react-native-gesture-handler": "^2.6.0",
     "react-native-paper": "^4.12.4",
@@ -39,10 +38,10 @@
     "react-native-screens": "^3.18.2",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg-charts": "^5.4.0",
-    "react-native-web": "0.17.7",
-    "react-native-webview": "^11.23.1",
     "react-navigation": "^4.4.4",
-    "tinycolor2": "^1.4.2"
+    "tinycolor2": "^1.4.2",
+    "victory": "^36.6.8",
+    "victory-native": "^36.6.8"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
