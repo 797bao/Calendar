@@ -212,7 +212,10 @@ function MetricsScreen({ navigation }) {
               { x: "Fri 4", y: 5, fill: "orange" },
               { x: "Sat 5", y: 5, fill: "red" },
             ]}
-            labels={({ datum }) => datum.y}
+            labels={({ datum }) => {
+              if (datum.y != 0) return datum.y;
+              else return "";
+            }}
             barRatio={0.75}
             labelComponent={
               <VictoryLabel
@@ -238,11 +241,16 @@ function MetricsScreen({ navigation }) {
               { x: "Tue 1", y: 4, fill: "orange" },
               { x: "Thu 3", y: 2, fill: "red" },
             ]}
-            labels={({ datum }) => datum.y}
+            labels={({ datum }) => {
+              if (datum.y != 0) return datum.y;
+              else return "";
+            }}
             barRatio={0.75}
             labelComponent={
               <VictoryLabel
-                dx={-10}
+                dx={({ data, index }) => {
+                  return -data[index].y * 17;
+                }}
                 style={{
                   fill: "white",
                   fontSize: 15,
@@ -264,11 +272,16 @@ function MetricsScreen({ navigation }) {
               { x: "Thu 3", y: 2, fill: "orange" },
               { x: "Fri 4", y: 3, fill: "green" },
             ]}
-            labels={({ datum }) => datum.y}
+            labels={({ datum }) => {
+              if (datum.y != 0) return datum.y;
+              else return "";
+            }}
             barRatio={0.75}
             labelComponent={
               <VictoryLabel
-                dx={-10}
+                dx={({ data, index }) => {
+                  return -data[index].y * 17;
+                }}
                 style={{
                   fill: "white",
                   fontSize: 15,
