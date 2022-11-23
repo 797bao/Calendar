@@ -174,15 +174,16 @@ const vdata = [
 
 let sampleData = [1, 2, 3, 4, 5];
 
-let barHeight = Dimensions.get("window").height / 16; //16 bars for the whole window
+let barHeight = Dimensions.get("window").height / 11; //16 bars for the whole window
 
 function MetricsScreen({ navigation }) {
   return (
     <View>
       <View style={{ paddingTop: 100 }}></View>
 
-      <VictoryChart stroke height={barHeight * 6} domainPadding={{ x: 25 }}>
+      <VictoryChart stroke height={barHeight * 4} domainPadding={{ x: 25 }}>
         <VictoryAxis
+          invertAxis={true}
           dependentAxis={false}
           style={{
             axis: { stroke: "#756f6a" },
@@ -197,7 +198,7 @@ function MetricsScreen({ navigation }) {
           style={{
             grid: { stroke: "grey", strokeWidth: 0.4 },
             axis: { stroke: "white", strokeWidth: 0.01 },
-            tickLabels: { fontSize: 13.5, padding: 5, fill: "gray" },
+            tickLabels: { fontSize: 15.5, padding: 5, fill: "gray" },
           }}
         />
         <VictoryAxis tickFormat={(x) => ``} />
@@ -209,12 +210,15 @@ function MetricsScreen({ navigation }) {
               { x: "Wed 2", y: 3, fill: "blue" },
               { x: "Thu 3", y: 5, fill: "green" },
               { x: "Fri 4", y: 5, fill: "orange" },
+              { x: "Sat 5", y: 5, fill: "red" },
             ]}
             labels={({ datum }) => datum.y}
-            barRatio={0.5}
+            barRatio={0.75}
             labelComponent={
               <VictoryLabel
-                dx={-10}
+                dx={({ data, index }) => {
+                  return -data[index].y * 17;
+                }}
                 style={{
                   fill: "white",
                   fontSize: 15,
@@ -235,7 +239,7 @@ function MetricsScreen({ navigation }) {
               { x: "Thu 3", y: 2, fill: "red" },
             ]}
             labels={({ datum }) => datum.y}
-            barRatio={0.5}
+            barRatio={0.75}
             labelComponent={
               <VictoryLabel
                 dx={-10}
@@ -261,7 +265,7 @@ function MetricsScreen({ navigation }) {
               { x: "Fri 4", y: 3, fill: "green" },
             ]}
             labels={({ datum }) => datum.y}
-            barRatio={0.5}
+            barRatio={0.75}
             labelComponent={
               <VictoryLabel
                 dx={-10}
