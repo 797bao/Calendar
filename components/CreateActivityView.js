@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import {
-  DatePickerIOS,
-  View,
   StyleSheet,
   SafeAreaView,
   ScrollView,
@@ -11,22 +9,16 @@ import {
 } from "react-native";
 import ColorPalette from "react-native-color-palette";
 import { Button } from "react-native-paper";
-import procData from "../services/procData";
 import { Dimensions } from "react-native";
 
 // Add a color picker, input for Activity name, and button to save 
 
 let hourSize = Dimensions.get("window").height / 13.34;
-const [color, setSelectedColor] = useState("#C0392B");
-const [activityName, onChangeActivityName] = React.useState("Event");
 const colors = ["#C0392B", "#E74C3C", "#9B59B6", "#8E44AD", "#2980B9"];
 
 const CreateActivityView = (props) => {
-    const [chosenStartDate, setChosenStartDate] = useState(new Date());
-    const [chosenEndDate, setChosenEndDate] = useState(new Date());
-    const [title, onChangeTitle] = React.useState("Event");
-    const [subtitle, onChangeSubtitle] = React.useState("Subtitle");
     const [color, setSelectedColor] = useState("#C0392B");
+    const [activityName, onChangeActivityName] = React.useState("Add Activity Name");
     
     let dateKey = new Date(chosenStartDate);
     dateKey.setHours(0, 0, 0, 0);
@@ -45,7 +37,7 @@ const CreateActivityView = (props) => {
             <TextInput
             style={styles.input}
             onChangeText={onChangeActivityName}
-            value={title}
+            value={activityName}
             />
             <ColorPalette
             onChange={setSelectedColor}
