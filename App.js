@@ -6,10 +6,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import MonthlyView from "./components/MonthlyView";
 import DailyView from "./components/DailyView";
-import AddEventView from "./components/AddEventView";
 import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import AddEventView from "./components/AddEventView";
+import CreateActivityView from "./components/CreateActivityView";
 
 import * as eva from "@eva-design/eva";
 import {
