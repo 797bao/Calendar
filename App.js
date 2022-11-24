@@ -178,7 +178,7 @@ const vdata = [
 let sampleData = [1, 2, 3, 4, 5];
 
 const graphicColor = ["red", "orange", "green", "blue"];
-let barHeight = Dimensions.get("window").height / 19; //16 bars for the whole window
+let barHeight = Dimensions.get("window").height / 23; //23 bars for the whole window
 
 function MetricsScreen({ navigation }) {
   const [data3, setData3] = useState([
@@ -207,10 +207,14 @@ function MetricsScreen({ navigation }) {
           labels: { fill: "white", fontSize: 20, fontFamily: "Courier" },
         }}
       />
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{
+          paddingBottom: 220, //needs to be variable
+        }}
+      >
         <VictoryChart
           stroke
-          height={barHeight * 10}
+          height={barHeight * 31}
           padding={{ left: 90, right: 40, top: 30 }}
           domainPadding={{ x: 25 }}
         >
@@ -258,6 +262,27 @@ function MetricsScreen({ navigation }) {
                 { x: "Tue 8", y: 5, fill: "green" },
                 { x: "Wed 9", y: 5, fill: "orange" },
                 { x: "Thu 10", y: 5, fill: "red" },
+                { x: "Fri 11", y: 2, fill: "red" },
+                { x: "Sat 12", y: 3, fill: "blue" },
+                { x: "Sun 13", y: 5, fill: "green" },
+                { x: "Mon 14", y: 5, fill: "orange" },
+                { x: "Tue 15", y: 5, fill: "red" },
+                { x: "Wed 16", y: 2, fill: "red" },
+                { x: "Thu 17", y: 3, fill: "blue" },
+                { x: "Fri 18", y: 5, fill: "green" },
+                { x: "Sat 19", y: 5, fill: "orange" },
+                { x: "Sun 20", y: 5, fill: "red" },
+                { x: "Mon 21", y: 5, fill: "red" },
+                { x: "Tue 22", y: 2, fill: "red" },
+                { x: "Wed 23", y: 3, fill: "blue" },
+                { x: "Thu 24", y: 5, fill: "green" },
+                { x: "Fri 25", y: 5, fill: "orange" },
+                { x: "Sat 26", y: 5, fill: "red" },
+                { x: "Sun 27", y: 2, fill: "red" },
+                { x: "Mon 28", y: 3, fill: "blue" },
+                { x: "Tue 29", y: 5, fill: "green" },
+                { x: "Thu 30", y: 5, fill: "orange" },
+                { x: "Fri 31", y: 5, fill: "red" },
               ]}
               labels={({ datum }) => {
                 if (datum.y != 0) return datum.y;
