@@ -174,30 +174,31 @@ const vdata = [
 
 let sampleData = [1, 2, 3, 4, 5];
 
-let barHeight = Dimensions.get("window").height / 16; //16 bars for the whole window
+let barHeight = Dimensions.get("window").height / 11; //16 bars for the whole window
 
 function MetricsScreen({ navigation }) {
   return (
     <View>
       <View style={{ paddingTop: 100 }}></View>
 
-      <VictoryChart
-        height={barHeight * 9}
-        domainPadding={{ x: 0 }}
-        style={{
-          axis: { stroke: "#756f6a" },
-          axisLabel: { fontSize: 20, padding: 30 },
-          grid: { stroke: ({ tick }) => (tick > 0.5 ? "black" : "grey") },
-          ticks: { stroke: "grey", size: 5 },
-          tickLabels: { fontSize: 15, padding: 5 },
-        }}
-      >
-        <VictoryAxis dependentAxis={false} />
+      <VictoryChart stroke height={barHeight * 4} domainPadding={{ x: 25 }}>
         <VictoryAxis
+          invertAxis={true}
+          dependentAxis={false}
+          style={{
+            axis: { stroke: "#756f6a" },
+            tickLabels: { fontSize: 16, padding: 5 },
+          }}
+        />
+        <VictoryAxis
+          color="gray"
           orientation="top"
+          stroke={5}
           dependentAxis={true}
           style={{
-            grid: { stroke: "grey" },
+            grid: { stroke: "grey", strokeWidth: 0.4 },
+            axis: { stroke: "white", strokeWidth: 0.01 },
+            tickLabels: { fontSize: 15.5, padding: 5, fill: "gray" },
           }}
         />
         <VictoryAxis tickFormat={(x) => ``} />
@@ -205,92 +206,100 @@ function MetricsScreen({ navigation }) {
           <VictoryBar
             data={[
               //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
-              { x: "a", y: 2, color: "red" },
-              { x: "b", y: 3, fill: "red" },
-              { x: "c", y: 5, fill: "red" },
-              { x: "e", y: 5, fill: "red" },
-              { x: "f", y: 5, fill: "red" },
+              { x: "Tue 1", y: 2, fill: "red" },
+              { x: "Wed 2", y: 3, fill: "blue" },
+              { x: "Thu 3", y: 5, fill: "green" },
+              { x: "Fri 4", y: 5, fill: "orange" },
+              { x: "Sat 5", y: 5, fill: "red" },
             ]}
-            labels={({ datum }) => datum.y}
-            //labelComponent={<VictoryLabel dy={30} />}
-            color="blue"
+            labels={({ datum }) => {
+              if (datum.y != 0) return datum.y;
+              else return "";
+            }}
+            barRatio={0.75}
+            labelComponent={
+              <VictoryLabel
+                dx={({ data, index }) => {
+                  return -data[index].y * 17;
+                }}
+                style={{
+                  fill: "white",
+                  fontSize: 15,
+                }}
+              />
+            }
+            style={{
+              data: {
+                fill: ({ datum }) => datum.fill,
+              },
+            }}
+            //color="red"
           />
           <VictoryBar
             data={[
-              { x: "N 21", y: 4, fill: "red" },
-              { x: "N 22", y: 4, fill: "red" },
-              { x: "N 23", y: 5, fill: "red" },
-
-              //{ x: "N 21", y: 22, fill: "red" },
+              //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
+              { x: "Tue 1", y: 4, fill: "orange" },
+              { x: "Thu 3", y: 2, fill: "red" },
             ]}
-            labelComponent={<VictoryTooltip />}
+            labels={({ datum }) => {
+              if (datum.y != 0) return datum.y;
+              else return "";
+            }}
+            barRatio={0.75}
+            labelComponent={
+              <VictoryLabel
+                dx={({ data, index }) => {
+                  return -data[index].y * 17;
+                }}
+                style={{
+                  fill: "white",
+                  fontSize: 15,
+                }}
+              />
+            }
+            style={{
+              data: {
+                fill: ({ datum }) => datum.fill,
+              },
+            }}
+            //color="red"
           />
           <VictoryBar
             data={[
-              { x: "a", y: 3 },
-              { x: "b", y: 2 },
-              { x: "c", y: 14 },
-              { x: "d", y: 25 },
+              //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
+              { x: "Tue 1", y: 1, fill: "blue" },
+              { x: "Wed 2", y: 1, fill: "red" },
+              { x: "Thu 3", y: 2, fill: "orange" },
+              { x: "Fri 4", y: 3, fill: "green" },
             ]}
-            labelComponent={<VictoryTooltip />}
+            labels={({ datum }) => {
+              if (datum.y != 0) return datum.y;
+              else return "";
+            }}
+            barRatio={0.75}
+            labelComponent={
+              <VictoryLabel
+                dx={({ data, index }) => {
+                  return -data[index].y * 17;
+                }}
+                style={{
+                  fill: "white",
+                  fontSize: 15,
+                }}
+              />
+            }
+            style={{
+              data: {
+                fill: ({ datum }) => datum.fill,
+              },
+            }}
+            //color="red"
           />
         </VictoryStack>
       </VictoryChart>
     </View>
   );
 }
-
-/** 
-function MetricsScreen({ navigation }) {
-  return (
-    <View style={styles1.container}>
-      <VictoryChart theme={VictoryTheme.material}>
-        <VictoryArea data={sampleData} />
-        <VictoryAxis />
-      </VictoryChart>
-    </View>
-  );
-}
-*/
-
-/** 
-function MetricsScreen({ navigation }) {
-  return (
-    <View style={styles1.container}>
-      <VictoryChart
-        theme={VictoryTheme.material}
-        horizontal
-        domainPadding={{ x: 8 }}
-      >
-        <VictoryStack colorScale={["tomato", "orange", "gold"]}>
-          <VictoryBar
-            data={[
-              { x: "a", y: 2 },
-              { x: "b", y: 3 },
-              { x: "c", y: 5 },
-            ]}
-          />
-          <VictoryBar
-            data={[
-              { x: "a", y: 1 },
-              { x: "b", y: 4 },
-              { x: "c", y: 5 },
-            ]}
-          />
-          <VictoryBar
-            data={[
-              { x: "a", y: 3 },
-              { x: "b", y: 2 },
-              { x: "c", y: 62 },
-            ]}
-          />
-        </VictoryStack>
-      </VictoryChart>
-
-    </View>
-  );
-}
-*/
 
 const styles1 = StyleSheet.create({
   container: {
