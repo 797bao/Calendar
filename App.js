@@ -33,6 +33,7 @@ import {
   VictoryPie,
 } from "victory-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView } from "react-native-gesture-handler";
 
 let hourSize = Dimensions.get("window").height / 13.34;
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -177,7 +178,7 @@ const vdata = [
 let sampleData = [1, 2, 3, 4, 5];
 
 const graphicColor = ["red", "orange", "green", "blue"];
-let barHeight = Dimensions.get("window").height / 13; //16 bars for the whole window
+let barHeight = Dimensions.get("window").height / 19; //16 bars for the whole window
 
 function MetricsScreen({ navigation }) {
   const [data3, setData3] = useState([
@@ -206,137 +207,144 @@ function MetricsScreen({ navigation }) {
           labels: { fill: "white", fontSize: 20, fontFamily: "Courier" },
         }}
       />
-      <VictoryChart
-        stroke
-        height={barHeight * 4}
-        padding={{ left: 90, right: 40, top: 30 }}
-        domainPadding={{ x: 25 }}
-      >
-        <VictoryAxis
-          invertAxis={true}
-          dependentAxis={false}
-          style={{
-            axis: { stroke: "#756f6a" },
-            tickLabels: {
-              fontSize: 16.5,
-              padding: 12,
-              //fontWeight: "bold",
-              fontFamily: "Courier",
-              fill: "#171717",
-            },
-          }}
-        />
-        <VictoryAxis
-          color="gray"
-          orientation="top"
-          stroke={5}
-          dependentAxis={true}
-          style={{
-            grid: { stroke: "grey", strokeWidth: 0.4 },
-            axis: { stroke: "white", strokeWidth: 0.01 },
-            tickLabels: {
-              fontSize: 15.5,
-              padding: 5,
-              fill: "gray",
-            },
-          }}
-        />
-        <VictoryAxis tickFormat={(x) => ``} />
-        <VictoryStack sortOrder="ascending" horizontal>
-          <VictoryBar
-            data={[
-              //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
-              { x: "Tue 1", y: 2, fill: "red" },
-              { x: "Wed 2", y: 3, fill: "blue" },
-              { x: "Thu 3", y: 5, fill: "green" },
-              { x: "Fri 4", y: 5, fill: "orange" },
-              { x: "Sat 5", y: 5, fill: "red" },
-            ]}
-            labels={({ datum }) => {
-              if (datum.y != 0) return datum.y;
-              else return "";
-            }}
-            barRatio={0.75}
-            labelComponent={
-              <VictoryLabel
-                dx={({ data, index }) => {
-                  return -data[index].y * 17;
-                }}
-                style={{
-                  fill: "white",
-                  fontSize: 17,
-                }}
-              />
-            }
+      <ScrollView>
+        <VictoryChart
+          stroke
+          height={barHeight * 10}
+          padding={{ left: 90, right: 40, top: 30 }}
+          domainPadding={{ x: 25 }}
+        >
+          <VictoryAxis
+            invertAxis={true}
+            dependentAxis={false}
             style={{
-              data: {
-                fill: ({ datum }) => datum.fill,
+              axis: { stroke: "#756f6a" },
+              tickLabels: {
+                fontSize: 16.5,
+                padding: 12,
+                //fontWeight: "bold",
+                fontFamily: "Courier",
+                fill: "#171717",
               },
             }}
-            //color="red"
           />
-          <VictoryBar
-            data={[
-              //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
-              { x: "Tue 1", y: 4, fill: "orange" },
-              { x: "Thu 3", y: 2, fill: "red" },
-            ]}
-            labels={({ datum }) => {
-              if (datum.y != 0) return datum.y;
-              else return "";
-            }}
-            barRatio={0.75}
-            labelComponent={
-              <VictoryLabel
-                dx={({ data, index }) => {
-                  return -data[index].y * 17;
-                }}
-                style={{
-                  fill: "white",
-                  fontSize: 17,
-                }}
-              />
-            }
+          <VictoryAxis
+            color="gray"
+            orientation="top"
+            stroke={5}
+            dependentAxis={true}
             style={{
-              data: {
-                fill: ({ datum }) => datum.fill,
+              grid: { stroke: "grey", strokeWidth: 0.4 },
+              axis: { stroke: "white", strokeWidth: 0.01 },
+              tickLabels: {
+                fontSize: 15.5,
+                padding: 5,
+                fill: "gray",
               },
             }}
-            //color="red"
           />
-          <VictoryBar
-            data={[
-              //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
-              { x: "Tue 1", y: 1, fill: "blue" },
-              { x: "Wed 2", y: 1, fill: "red" },
-              { x: "Thu 3", y: 2, fill: "orange" },
-              { x: "Fri 4", y: 3, fill: "green" },
-            ]}
-            labels={({ datum }) => {
-              if (datum.y != 0) return datum.y;
-              else return "";
-            }}
-            barRatio={0.75}
-            labelComponent={
-              <VictoryLabel
-                dx={({ data, index }) => {
-                  return -data[index].y * 17;
-                }}
-                style={{
-                  fill: "white",
-                  fontSize: 17,
-                }}
-              />
-            }
-            style={{
-              data: {
-                fill: ({ datum }) => datum.fill,
-              },
-            }}
-            //color="red"
-          />
-        </VictoryStack>
-      </VictoryChart>
+          <VictoryAxis tickFormat={(x) => ``} />
+          <VictoryStack sortOrder="ascending" horizontal>
+            <VictoryBar
+              data={[
+                //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
+                { x: "Tue 1", y: 2, fill: "red" },
+                { x: "Wed 2", y: 3, fill: "blue" },
+                { x: "Thu 3", y: 5, fill: "green" },
+                { x: "Fri 4", y: 5, fill: "orange" },
+                { x: "Sat 5", y: 5, fill: "red" },
+                { x: "Sun 6", y: 2, fill: "red" },
+                { x: "Mon 7", y: 3, fill: "blue" },
+                { x: "Tue 8", y: 5, fill: "green" },
+                { x: "Wed 9", y: 5, fill: "orange" },
+                { x: "Thu 10", y: 5, fill: "red" },
+              ]}
+              labels={({ datum }) => {
+                if (datum.y != 0) return datum.y;
+                else return "";
+              }}
+              barRatio={0.75}
+              labelComponent={
+                <VictoryLabel
+                  dx={({ data, index }) => {
+                    return -data[index].y * 17;
+                  }}
+                  style={{
+                    fill: "white",
+                    fontSize: 17,
+                  }}
+                />
+              }
+              style={{
+                data: {
+                  fill: ({ datum }) => datum.fill,
+                },
+              }}
+              //color="red"
+            />
+            <VictoryBar
+              data={[
+                //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
+                { x: "Tue 1", y: 4, fill: "orange" },
+                { x: "Thu 3", y: 2, fill: "red" },
+              ]}
+              labels={({ datum }) => {
+                if (datum.y != 0) return datum.y;
+                else return "";
+              }}
+              barRatio={0.75}
+              labelComponent={
+                <VictoryLabel
+                  dx={({ data, index }) => {
+                    return -data[index].y * 17;
+                  }}
+                  style={{
+                    fill: "white",
+                    fontSize: 17,
+                  }}
+                />
+              }
+              style={{
+                data: {
+                  fill: ({ datum }) => datum.fill,
+                },
+              }}
+              //color="red"
+            />
+            <VictoryBar
+              data={[
+                //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
+                { x: "Tue 1", y: 1, fill: "blue" },
+                { x: "Wed 2", y: 1, fill: "red" },
+                { x: "Thu 3", y: 2, fill: "orange" },
+                { x: "Fri 4", y: 3, fill: "green" },
+              ]}
+              labels={({ datum }) => {
+                if (datum.y != 0) return datum.y;
+                else return "";
+              }}
+              barRatio={0.75}
+              labelComponent={
+                <VictoryLabel
+                  dx={({ data, index }) => {
+                    return -data[index].y * 17;
+                  }}
+                  style={{
+                    fill: "white",
+                    fontSize: 17,
+                  }}
+                />
+              }
+              style={{
+                data: {
+                  fill: ({ datum }) => datum.fill,
+                },
+              }}
+              //color="red"
+            />
+          </VictoryStack>
+        </VictoryChart>
+      </ScrollView>
     </SafeAreaView>
   );
 }
