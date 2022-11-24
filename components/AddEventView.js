@@ -4,10 +4,11 @@ import {
   View,
   StyleSheet,
   SafeAreaView,
+  ScrollView,
+  StatusBar,
   Text,
   TextInput,
 } from "react-native";
-//import NativeColorPicker from 'native-color-picker';
 import ColorPalette from "react-native-color-palette";
 import { Button } from "react-native-paper";
 import procData from "../services/procData";
@@ -26,7 +27,7 @@ const AddEventView = (props) => {
   let dateKey = new Date(chosenStartDate);
   dateKey.setHours(0, 0, 0, 0);
 
-  const onClickHandler = () => {
+  const addEventListener = () => {
     let newData = {
       title: title,
       subtitle: subtitle,
@@ -41,33 +42,48 @@ const AddEventView = (props) => {
     });
   };
 
+  const removeEventListener = () => {
+    //props.route.params.removeData(dateKey);
+    props.navigation.navigate("DailyView", {
+      data: props.route.params.loggedData,
+    });
+  };
+
+
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        onChangeText={onChangeTitle}
-        value={title}
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={onChangeSubtitle}
-        value={subtitle}
-      />
-      <Text>Start</Text>
-      <DatePickerIOS date={chosenStartDate} onDateChange={setChosenStartDate} />
-      <Text>End</Text>
-      <DatePickerIOS date={chosenEndDate} onDateChange={setChosenEndDate} />
-      <ColorPalette
-        onChange={setSelectedColor}
-        defaultColor={color}
-        colors={colors}
-        title={"Set Color"}
-        icon={<Text>✔</Text>}
-      />
-      <Button mode="contained" onPress={onClickHandler}>
-        Add Event
-      </Button>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeTitle}
+          value={title}
+        />
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeSubtitle}
+          value={subtitle}
+        />
+        <Text>Start</Text>
+        <DatePickerIOS date={chosenStartDate} onDateChange={setChosenStartDate} />
+        <Text>End</Text>
+        <DatePickerIOS date={chosenEndDate} onDateChange={setChosenEndDate} />
+        <ColorPalette
+          onChange={setSelectedColor}
+          defaultColor={color}
+          colors={colors}
+          title={"Set Color"}
+          icon={<Text>✔</Text>}
+        />
+        <Button mode="contained" onPress={addEventListener}>
+          Add Event
+        </Button>
+       
+        <Text>{"\n"}</Text>
+        <Button style={{color: "red"}} mode="contained" onPress={removeEventListener}>
+          Discard
+        </Button>
+        </ScrollView>
+      </SafeAreaView>
   );
 };
 
