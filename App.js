@@ -30,7 +30,9 @@ import {
   VictoryArea,
   VictoryAxis,
   VictoryTooltip,
+  VictoryPie,
 } from "victory-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 let hourSize = Dimensions.get("window").height / 13.34;
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -174,20 +176,54 @@ const vdata = [
 
 let sampleData = [1, 2, 3, 4, 5];
 
-let barHeight = Dimensions.get("window").height / 11; //16 bars for the whole window
+const graphicColor = ["red", "orange", "green", "blue"];
+let barHeight = Dimensions.get("window").height / 13; //16 bars for the whole window
 
 function MetricsScreen({ navigation }) {
-  return (
-    <View>
-      <View style={{ paddingTop: 100 }}></View>
+  const [data3, setData3] = useState([
+    { x: "chrome", y: 30 },
+    { x: "safari", y: 180 },
+    { x: "firefox", y: 200 },
+    { x: "edge", y: 120 },
+    { x: "others", y: 100 },
+  ]);
 
-      <VictoryChart stroke height={barHeight * 4} domainPadding={{ x: 25 }}>
+  return (
+    <SafeAreaView>
+      <VictoryPie
+        data={[
+          { x: "10", y: 10 },
+          { x: "11", y: 11 },
+          { x: "8", y: 8 },
+          { x: "4", y: 4 },
+        ]}
+        labelRadius={({ innerRadius }) => innerRadius + 8}
+        width={250}
+        height={250}
+        colorScale={graphicColor}
+        innerRadius={45}
+        style={{
+          labels: { fill: "white", fontSize: 20, fontFamily: "Courier" },
+        }}
+      />
+      <VictoryChart
+        stroke
+        height={barHeight * 4}
+        padding={{ left: 90, right: 40, top: 30 }}
+        domainPadding={{ x: 25 }}
+      >
         <VictoryAxis
           invertAxis={true}
           dependentAxis={false}
           style={{
             axis: { stroke: "#756f6a" },
-            tickLabels: { fontSize: 16, padding: 5 },
+            tickLabels: {
+              fontSize: 16.5,
+              padding: 12,
+              //fontWeight: "bold",
+              fontFamily: "Courier",
+              fill: "#171717",
+            },
           }}
         />
         <VictoryAxis
@@ -198,11 +234,15 @@ function MetricsScreen({ navigation }) {
           style={{
             grid: { stroke: "grey", strokeWidth: 0.4 },
             axis: { stroke: "white", strokeWidth: 0.01 },
-            tickLabels: { fontSize: 15.5, padding: 5, fill: "gray" },
+            tickLabels: {
+              fontSize: 15.5,
+              padding: 5,
+              fill: "gray",
+            },
           }}
         />
         <VictoryAxis tickFormat={(x) => ``} />
-        <VictoryStack horizontal>
+        <VictoryStack sortOrder="ascending" horizontal>
           <VictoryBar
             data={[
               //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
@@ -224,7 +264,7 @@ function MetricsScreen({ navigation }) {
                 }}
                 style={{
                   fill: "white",
-                  fontSize: 15,
+                  fontSize: 17,
                 }}
               />
             }
@@ -253,7 +293,7 @@ function MetricsScreen({ navigation }) {
                 }}
                 style={{
                   fill: "white",
-                  fontSize: 15,
+                  fontSize: 17,
                 }}
               />
             }
@@ -284,7 +324,7 @@ function MetricsScreen({ navigation }) {
                 }}
                 style={{
                   fill: "white",
-                  fontSize: 15,
+                  fontSize: 17,
                 }}
               />
             }
@@ -297,7 +337,7 @@ function MetricsScreen({ navigation }) {
           />
         </VictoryStack>
       </VictoryChart>
-    </View>
+    </SafeAreaView>
   );
 }
 
