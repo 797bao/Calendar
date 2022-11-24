@@ -42,7 +42,7 @@ const Header = ({
             <View style={styles.text_row}>
               {left_icon}
               <TouchableOpacity
-                onPress={() => navigation.navigate("MonthView")}
+                onPress={() => navigation.navigate("CreateActivityView")}
               >
                 <Image
                   style={headerStyles.image}

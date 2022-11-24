@@ -410,6 +410,10 @@ export default function App() {
                     updateData: callbackFunction,
                   }}
                 />
+                <Stack.Screen
+                  name="CreateActivityView"
+                  component={CreateActivityView}
+                />
                 {(props) => (
                   <AddEventView {...props} loggedItems={loggedItems} />
                 )}
