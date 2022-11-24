@@ -197,8 +197,8 @@ function MetricsScreen({ navigation }) {
           { x: "8", y: 8 },
           { x: "4", y: 4 },
         ]}
-        labelRadius={({ innerRadius }) => innerRadius + 8}
-        width={250}
+        labelRadius={({ innerRadius }) => innerRadius + 4}
+        width={width}
         height={250}
         colorScale={graphicColor}
         innerRadius={45}
