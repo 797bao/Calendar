@@ -12,6 +12,7 @@ import { AppContext } from "./ContextProvider";
 import tinycolor from "tinycolor2";
 import styles from "./headerStyles";
 import moment from "moment";
+import CreateActivityView from "./CreateActivityView";
 
 const Header = ({
   header_color,
@@ -42,7 +43,7 @@ const Header = ({
             <View style={styles.text_row}>
               {left_icon}
               <TouchableOpacity
-                onPress={() => navigation.navigate("MonthView")}
+                onPress={() => navigation.navigate("CreateActivityView")}
               >
                 <Image
                   style={headerStyles.image}

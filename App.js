@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Button, View, Text, StyleSheet } from "react-native";
+import { Button, View, Text, StyleSheet, Image } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -10,6 +10,7 @@ import AddEventView from "./components/AddEventView";
 import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import CreateActivityView from "./components/CreateActivityView";
 
 import * as eva from "@eva-design/eva";
 import {
@@ -40,40 +41,29 @@ const { Navigator, Screen } = createBottomTabNavigator();
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const loggedItems = new Map();
+const allActivities = new Map();
+
+//default activity is called Event
+allActivities.set("Event", "#485D99");
+allActivities.set("School", "#9e3c31");
 
 loggedItems.set(
-  new Date(2022, 10, 20).toString(),
+  new Date(2022, 10, 27).toString(),
   procData(
     [
       {
         title: "TEST",
-        subtitle: "TEST",
-        start: new Date(2022, 10, 20, 2, 21),
-        end: new Date(2022, 10, 20, 4, 0),
-        color: "#aa0000",
+        start: new Date(2022, 10, 27, 2, 21),
+        end: new Date(2022, 10, 27, 4, 0),
+        color: allActivities.get("Event"),
+        activitityName: "Event",
       },
       {
         title: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-        subtitle: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-        start: new Date(2022, 10, 20, 8, 21),
-        end: new Date(2022, 10, 20, 12, 20),
-        color: "#390099",
-      },
-    ],
-    hourSize
-  )
-);
-
-loggedItems.set(
-  new Date(2022, 10, 21).toString(),
-  procData(
-    [
-      {
-        title: "Lunch Appointment",
-        subtitle: "With John",
-        start: new Date(2022, 10, 21, 1, 21),
-        end: new Date(2022, 10, 21, 7, 20),
-        color: "#390099",
+        start: new Date(2022, 10, 27, 8, 21),
+        end: new Date(2022, 10, 27, 12, 20),
+        color: allActivities.get("School"),
+        activitityName: "School",
       },
     ],
     hourSize
@@ -180,15 +170,54 @@ let sampleData = [1, 2, 3, 4, 5];
 const graphicColor = ["red", "orange", "green", "blue"];
 let barHeight = Dimensions.get("window").height / 23; //23 bars for the whole window
 
-function MetricsScreen({ navigation }) {
-  const [data3, setData3] = useState([
-    { x: "chrome", y: 30 },
-    { x: "safari", y: 180 },
-    { x: "firefox", y: 200 },
-    { x: "edge", y: 120 },
-    { x: "others", y: 100 },
-  ]);
+function displayMonthBars(month, year) {
+  //0 = jan, dec = 11
+  let days = getDaysInMonth(month, year);
+  let output = new Array(5);
 
+  for (let i = 0; i < days.length; i++) {
+    let key = days[i].toString();
+    if (loggedItems.has(key)) {
+      //check each day
+      let allEntryForDay = loggedItems.get(key);
+
+      for (
+        let x = 0;
+        x < allEntryForDay;
+        x++ //check every logged item in the day
+      ) {
+        //accumulate the sums of each items activity
+      }
+    }
+    console.log("DAY " + days[i]);
+    console.log("DAY --- " + days[i].toString());
+    /**
+    if (loggedItems.get(days[i]).toString() !== undefined) {
+      console.log("GOT ");
+      console.log(loggedItems.get(days[i].toString()));
+    }
+     */
+  }
+}
+
+function getMonthShortName(monthNo) {
+  const date = new Date();
+  date.setMonth(monthNo - 1);
+  return date.toLocaleString("en-US", { month: "short" });
+}
+
+function getDaysInMonth(month, year) {
+  var date = new Date(year, month, 1);
+  var days = [];
+  while (date.getMonth() === month) {
+    days.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+  return days;
+}
+
+function MetricsScreen({ navigation }) {
+  displayMonthBars(10, 2022); //nov 2022
   return (
     <SafeAreaView>
       <VictoryPie
@@ -383,60 +412,11 @@ const styles1 = StyleSheet.create({
   },
 });
 
-/**
-function MetricsScreen({ navigation }) {
-  return (
-    <View style={{ paddingTop: 100 }}>
-      <XAxis
-        style={{ paddingLeft: 30, width: width * 0.93 }}
-        data={xAxis}
-        formatLabel={(value, index) => index}
-        contentInset={{ left: 10, right: 10 }}
-        svg={{ fontSize: 13, fill: "gray" }}
-      ></XAxis>
-      <View style={{ flexDirection: "row", paddingLeft: 20 }}>
-        <YAxis
-          //style={{ width: 20, height: 200 }}
-          data={dataTest}
-          svg={{
-            fill: "black",
-            fontSize: 15,
-          }}
-          contentInset={{ top: 25, bottom: 25 }}
-          formatLabel={(value) => `${value}   `}
-          numberOfTicks={6}
-        />
-
-        <StackedBarChart
-          style={{ height: height, width: width * 0.8 }}
-          keys={keys}
-          colors={colors}
-          contentInset={{ top: 10, bottom: 10 }}
-          horizontal={true}
-          spacingInner={0.25}
-          data={data}
-          xMax={10}
-          ymax={10}
-        >
-          <Grid data={[1, 2, 3, 4]} direction={Grid.Direction.VERTICAL} />
-        </StackedBarChart>
-      </View>
-    </View>
-  );
-}
- */
-
-let test = "Test";
-
 export default function App() {
   const [log, setLog] = useState(loggedItems);
+  const [activities, setActivities] = useState(allActivities);
 
-  const callbackFunction = (chosenStartDate, childData) => {
-    console.log("CALLBACK ");
-    console.log(" ");
-    console.log(chosenStartDate);
-    console.log(" ");
-
+  const setLoggedItems = (chosenStartDate, childData) => {
     if (loggedItems.get(chosenStartDate.toString()) == null) {
       //if the data doesn't exist
       //create a new entry for that date and push the data
@@ -449,8 +429,14 @@ export default function App() {
         .get(chosenStartDate.toString())
         .push(procData([childData], hourSize)[0]);
     }
-
     setLog(loggedItems);
+  };
+
+  const pushActivity = (activityName, activityColor) => {
+    //add duplication handling
+    allActivities.set(activityName, activityColor);
+    setActivities(allActivities);
+    console.log("ALL ACTIVTIES " + JSON.stringify(allActivities));
   };
 
   return (
@@ -464,9 +450,13 @@ export default function App() {
           name="Calendar"
           component={function CalendarScreen() {
             return (
-              <Stack.Navigator initialRouteName="DailyView">
+              <Stack.Navigator
+                initialRouteName="DailyView"
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
                 <Stack.Screen name="MonthlyView" component={MonthlyView} />
-
                 <Stack.Screen
                   name="DailyView"
                   component={DailyView}
@@ -474,12 +464,21 @@ export default function App() {
                   initialParams={{ loggedData: log }}
                 />
                 <Stack.Screen
+                  name="CreateActivityView"
+                  component={CreateActivityView}
+                  options={{ headerShown: false }}
+                  initialParams={{
+                    activity: activities,
+                    updateData: pushActivity,
+                  }}
+                />
+                <Stack.Screen
                   name="AddEventView"
                   component={AddEventView}
                   initialParams={{
+                    activity: activities,
                     loggedData: log,
-                    test: test,
-                    updateData: callbackFunction,
+                    updateData: setLoggedItems,
                   }}
                 />
                 {(props) => (
