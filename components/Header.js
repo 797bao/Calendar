@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   View,
   Text,
@@ -44,9 +44,10 @@ const Header = ({
             <View style={styles.text_row}>
               {left_icon}
               <TouchableOpacity
-                onClick={() => this.props.navigation.openDrawer()
-                  //navigation.navigate("MonthView")
-                }
+                onPress={() => {
+                  console.log("DRAWER");
+                  navigation.openDrawer();
+                }}
               >
                 <Image
                   style={headerStyles.image}

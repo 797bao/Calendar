@@ -18,7 +18,7 @@ import { Dimensions } from "react-native";
 
 const addEventListener = () => {
   props.route.params.updateData(dateKey, newData);
-  props.navigation.navigate("DailyView", {
+  props.navigation.navigate("Day", {
     data: props.route.params.loggedData,
   });
 };
@@ -57,7 +57,7 @@ const CreateActivityView = (props) => {
     console.log("Activity name: " + activityName);
     console.log("Activity color: " + color);
     props.route.params.updateData(activityName, color);
-    props.navigation.navigate("DailyView");
+    props.navigation.navigate("Day");
   };
 
   return (
@@ -67,7 +67,7 @@ const CreateActivityView = (props) => {
           style={styles.xButton}
           onPress={() => {
             console.log("ON PRSS ");
-            props.navigation.navigate("DailyView");
+            props.navigation.navigate("Day");
           }}
         >
           <Image

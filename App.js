@@ -1,9 +1,19 @@
-import 'react-native-gesture-handler'
 import * as React from "react";
 import { useState } from "react";
-import { Button, View, Text, StyleSheet, TouchableOpacity, Image} from "react-native";
-import { NavigationContainer, getFocusedRouteNameFromRoute, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  Button,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import {
+  NavigationContainer,
+  getFocusedRouteNameFromRoute,
+  useNavigation,
+} from "@react-navigation/native";
 
 import MonthlyView from "./components/MonthlyView";
 import DailyView from "./components/DailyView";
@@ -12,7 +22,6 @@ import DeleteEventView from "./components/DeleteEventView";
 import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {createDrawerNavigator} from '@react-navigation/drawer';
 import CreateActivityView from "./components/CreateActivityView";
 
 import * as eva from "@eva-design/eva";
@@ -38,6 +47,7 @@ import {
 } from "victory-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 let hourSize = Dimensions.get("window").height / 13.34;
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -146,29 +156,18 @@ const data = [
   },
 ];
 
-let height = (Dimensions.get("window").height / 25) * data.length;
-
-const data1 = [1, 2, 3, 4, 5];
-const data2 = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80];
-
-const colors = ["#7b4173", "#a55194", "#ce6dbd", "#de9ed6"];
-const keys = ["apples", "bananas", "cherries", "dates"];
-
-const contentInset = { top: 20, bottom: 20 };
 let width = Dimensions.get("window").width;
 
-const dataTest = [1, 2, 3, 4, 5, 6];
-const xAxis = [1, 2, 3, 4, 5];
-const style = { width: 20, height: 200 };
-
-const vdata = [
-  { quarter: 1, earnings: 13000 },
-  { quarter: 2, earnings: 16500 },
-  { quarter: 3, earnings: 14250 },
-  { quarter: 4, earnings: 19000 },
-];
-
-let sampleData = [1, 2, 3, 4, 5];
+const Drawer = createDrawerNavigator();
+function Draw() {
+  return (
+    <Drawer.Navigator initialRouteName="Calendar">
+      <Drawer.Screen name="Add Event View" component={AddEventView} />
+      <Drawer.Screen name="Calendar" component={Calendar} />
+      <Drawer.Screen name="MonthlyView" component={MonthlyView} />
+    </Drawer.Navigator>
+  );
+}
 
 const graphicColor = ["red", "orange", "green", "blue"];
 let barHeight = Dimensions.get("window").height / 23; //23 bars for the whole window
@@ -415,6 +414,44 @@ const styles1 = StyleSheet.create({
   },
 });
 
+/** 
+export default function App() {
+  const [log, setLog] = useState(loggedItems);
+
+  const callbackFunction = (chosenStartDate, childData) => {
+    console.log("CALLBACK ");
+    console.log(" ");
+    console.log(chosenStartDate);
+    console.log(" ");
+
+    if (loggedItems.get(chosenStartDate.toString()) == null) {
+      //if the data doesn't exist
+      //create a new entry for that date and push the data
+      loggedItems.set(
+        chosenStartDate.toString(),
+        procData([childData], hourSize)
+      );
+    } else {
+      loggedItems
+        .get(chosenStartDate.toString())
+        .push(procData([childData], hourSize)[0]);
+    }
+
+    setLog(loggedItems);
+  };
+
+  return (
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="Calendar">
+        <Drawer.Screen name="Add Event View" component={AddEventView} />
+        <Drawer.Screen name="Daily View" component={DailyView} />
+        <Drawer.Screen name="MonthlyView" component={MonthlyView} />
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+}
+*/
+
 export default function App() {
   const [log, setLog] = useState(loggedItems);
   const [activities, setActivities] = useState(allActivities);
@@ -434,7 +471,6 @@ export default function App() {
     }
     setLog(loggedItems);
   };
-<<<<<<< HEAD
 
   const pushActivity = (activityName, activityColor) => {
     //add duplication handling
@@ -443,15 +479,91 @@ export default function App() {
     console.log("ALL ACTIVTIES " + JSON.stringify(allActivities));
   };
 
-=======
- 
-  return(
+  function drawers() {
+    return (
+      <Drawer.Navigator
+        initialRouteName="Day"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Drawer.Screen
+          name="Day"
+          component={DailyView}
+          options={{ headerShown: false, animationEnabled: true }}
+          initialParams={{ loggedData: log }}
+        />
+        <Drawer.Screen name="Month" component={MonthlyView} />
+
+        <Drawer.Screen
+          name="CrateActivityView"
+          component={CreateActivityView}
+          options={{ headerShown: false }}
+          initialParams={{
+            activity: activities,
+            updateData: pushActivity,
+          }}
+        />
+        {(props) => <AddEventView {...props} loggedItems={loggedItems} />}
+      </Drawer.Navigator>
+    );
+  }
+
+  return (
     <NavigationContainer>
-    <Drawer.Navigator initialRouteName="Calendar">
-    <Drawer.Screen name="Add Event View" component={AddEventView} />
-    <Drawer.Screen name="Daily View" component={DailyView} />
-    <Drawer.Screen name="MonthlyView" component={MonthlyView} />
-  </Drawer.Navigator>
-  </NavigationContainer>
-  )
+      <Tab.Navigator
+        initialRouteName="Calendar"
+        screenOptions={{ headerShown: false }}
+      >
+        <Tab.Screen name="Journal" component={JournalScreen} />
+        <Tab.Screen
+          name="Calendar"
+          component={function CalendarScreen() {
+            return (
+              <Stack.Navigator
+                initialRouteName="Day"
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen name="Drawer" component={drawers} />
+                <Drawer.Screen name="Month" component={MonthlyView} />
+                <Stack.Screen
+                  name="CrateActivityView"
+                  component={CreateActivityView}
+                  options={{ headerShown: false }}
+                  initialParams={{
+                    activity: activities,
+                    updateData: pushActivity,
+                  }}
+                />
+                <Stack.Screen
+                  name="AddEventView"
+                  component={AddEventView}
+                  initialParams={{
+                    activity: activities,
+                    loggedData: log,
+                    updateData: setLoggedItems,
+                  }}
+                />
+                <Stack.Screen
+                  name="DeleteEventView"
+                  component={DeleteEventView}
+                  initialParams={{
+                    activity: activities,
+                    loggedData: log,
+                    updateData: setLoggedItems,
+                  }}
+                />
+                {(props) => (
+                  <AddEventView {...props} loggedItems={loggedItems} />
+                )}
+              </Stack.Navigator>
+            );
+          }}
+        />
+        <Tab.Screen name="Metrics" component={MetricsScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
 }

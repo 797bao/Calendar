@@ -86,14 +86,14 @@ const AddEventView = (props) => {
     };
 
     props.route.params.updateData(dateKey, newData);
-    props.navigation.navigate("DailyView", {
+    props.navigation.navigate("Day", {
       data: props.route.params.loggedData,
     });
   };
 
   const removeEventListener = () => {
     //props.route.params.removeData(dateKey);
-    props.navigation.navigate("DailyView", {
+    props.navigation.navigate("Day", {
       data: props.route.params.loggedData,
     });
   };
@@ -105,7 +105,7 @@ const AddEventView = (props) => {
           style={styles.xButton}
           onPress={() => {
             console.log("ON PRSS ");
-            props.navigation.navigate("DailyView");
+            props.navigation.navigate("Day");
           }}
         >
           <Image
