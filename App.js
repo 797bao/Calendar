@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MonthlyView from "./components/MonthlyView";
 import DailyView from "./components/DailyView";
 import AddEventView from "./components/AddEventView";
+import DeleteEventView from "./components/DeleteEventView";
 import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -475,6 +476,15 @@ export default function App() {
                 <Stack.Screen
                   name="AddEventView"
                   component={AddEventView}
+                  initialParams={{
+                    activity: activities,
+                    loggedData: log,
+                    updateData: setLoggedItems,
+                  }}
+                />
+                <Stack.Screen
+                  name="DeleteEventView"
+                  component={DeleteEventView}
                   initialParams={{
                     activity: activities,
                     loggedData: log,

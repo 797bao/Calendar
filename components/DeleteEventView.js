@@ -220,6 +220,14 @@ const AddEventView = (props) => {
             style={styles.input2}
             onChangeText={onChangeSubtitle}
           />
+
+          <Button
+            style={styles.button}
+            mode="contained"
+            onPress={removeEventListener}
+          >
+            Delete
+          </Button>
         </View>
       </View>
     </SafeAreaView>

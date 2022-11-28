@@ -85,11 +85,13 @@ function mod(n, m) {
 }
 
 let dataItems;
+let navProp;
 
 export default class DailyView extends React.Component {
   constructor(props) {
     super(props);
-    console.log("SUPER ");
+    navProp = props;
+    console.log("navProps " + navProp.navigation);
 
     dataItems = this.props.route.params.loggedData;
     console.log(dataItems);
@@ -100,11 +102,9 @@ export default class DailyView extends React.Component {
   }
 
   //the carousel's data to render
+  /**
   _renderItem({ item, index }) {
-    //let datesInMap = loggedItems.get(item.toString());
     let datesInMap = dataItems.get(item.toString());
-    console.log(JSON.stringify(datesInMap));
-    console.log(" TEST  " + !!datesInMap);
     return (
       <View
         style={{
@@ -117,15 +117,18 @@ export default class DailyView extends React.Component {
         <View style={styles.container}>
           <SmartScroll hour_size={hourSize}>
             <View style={styles.body}>
-              <View style={styles.hour_col} /*the hours PM & AM */>
+              <View style={styles.hour_col} >
                 <TimeCol hour_size={hourSize} />
               </View>
-              <View style={styles.schedule_col} /**the horizontal lines */>
+              <View style={styles.schedule_col} >
                 <DrawnGrid></DrawnGrid>
                 <NowBar hour_size={hourSize} />
                 {!!datesInMap && (
                   //<ScheduledData dataArray={dataItems.get(item.toString())} />
-                  <ScheduledData dataArray={dataItems.get(item.toString())} />
+                  <ScheduledData
+                    dataArray={dataItems.get(item.toString())}
+                    navigation={this.props.navigation}
+                  />
                 )}
               </View>
             </View>
@@ -134,6 +137,7 @@ export default class DailyView extends React.Component {
       </View>
     );
   }
+  */
 
   render() {
     return (
@@ -171,9 +175,49 @@ export default class DailyView extends React.Component {
                     loopClonesPerSide={4} //allows swiping 4x without stopping
                     sliderWidth={Dimensions.get("screen").width}
                     itemWidth={Dimensions.get("screen").width}
-                    renderItem={this._renderItem}
+                    renderItem={({ item, index }) => {
+                      let datesInMap = dataItems.get(item.toString());
+                      return (
+                        <View
+                          style={{
+                            backgroundColor: "#fff",
+                            borderRadius: 5,
+                            height: Dimensions.get("screen").height * 0.85,
+                            padding: 0,
+                          }}
+                        >
+                          <View style={styles.container}>
+                            <SmartScroll hour_size={hourSize}>
+                              <View style={styles.body}>
+                                <View
+                                  style={styles.hour_col} /*the hours PM & AM */
+                                >
+                                  <TimeCol hour_size={hourSize} />
+                                </View>
+                                <View
+                                  style={
+                                    styles.schedule_col
+                                  } /**the horizontal lines */
+                                >
+                                  <DrawnGrid></DrawnGrid>
+                                  <NowBar hour_size={hourSize} />
+                                  {!!datesInMap && (
+                                    //<ScheduledData dataArray={dataItems.get(item.toString())} />
+                                    <ScheduledData
+                                      dataArray={dataItems.get(item.toString())}
+                                      navigation={this.props.navigation}
+                                    />
+                                  )}
+                                </View>
+                              </View>
+                            </SmartScroll>
+                          </View>
+                        </View>
+                      );
+                    }}
                     onBeforeSnapToItem={(index) => {
                       console.log("BEFORE SNAPPING ");
+                      console.log("navprop " + navProp);
                       if (index > this.state.activeIndex) {
                         if (
                           this.state.activeIndex == 0 &&
