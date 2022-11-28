@@ -1,7 +1,8 @@
+import 'react-native-gesture-handler'
 import * as React from "react";
 import { useState } from "react";
-import { Button, View, Text, StyleSheet, Image } from "react-native";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { Button, View, Text, StyleSheet, TouchableOpacity, Image} from "react-native";
+import { NavigationContainer, getFocusedRouteNameFromRoute, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import MonthlyView from "./components/MonthlyView";
@@ -11,6 +12,7 @@ import DeleteEventView from "./components/DeleteEventView";
 import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import CreateActivityView from "./components/CreateActivityView";
 
 import * as eva from "@eva-design/eva";
@@ -432,6 +434,7 @@ export default function App() {
     }
     setLog(loggedItems);
   };
+<<<<<<< HEAD
 
   const pushActivity = (activityName, activityColor) => {
     //add duplication handling
@@ -440,66 +443,15 @@ export default function App() {
     console.log("ALL ACTIVTIES " + JSON.stringify(allActivities));
   };
 
-  return (
+=======
+ 
+  return(
     <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName="Calendar"
-        screenOptions={{ headerShown: false }}
-      >
-        <Tab.Screen name="Journal" component={JournalScreen} />
-        <Tab.Screen
-          name="Calendar"
-          component={function CalendarScreen() {
-            return (
-              <Stack.Navigator
-                initialRouteName="DailyView"
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen name="MonthlyView" component={MonthlyView} />
-                <Stack.Screen
-                  name="DailyView"
-                  component={DailyView}
-                  options={{ headerShown: false }}
-                  initialParams={{ loggedData: log }}
-                />
-                <Stack.Screen
-                  name="CreateActivityView"
-                  component={CreateActivityView}
-                  options={{ headerShown: false }}
-                  initialParams={{
-                    activity: activities,
-                    updateData: pushActivity,
-                  }}
-                />
-                <Stack.Screen
-                  name="AddEventView"
-                  component={AddEventView}
-                  initialParams={{
-                    activity: activities,
-                    loggedData: log,
-                    updateData: setLoggedItems,
-                  }}
-                />
-                <Stack.Screen
-                  name="DeleteEventView"
-                  component={DeleteEventView}
-                  initialParams={{
-                    activity: activities,
-                    loggedData: log,
-                    updateData: setLoggedItems,
-                  }}
-                />
-                {(props) => (
-                  <AddEventView {...props} loggedItems={loggedItems} />
-                )}
-              </Stack.Navigator>
-            );
-          }}
-        />
-        <Tab.Screen name="Metrics" component={MetricsScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
+    <Drawer.Navigator initialRouteName="Calendar">
+    <Drawer.Screen name="Add Event View" component={AddEventView} />
+    <Drawer.Screen name="Daily View" component={DailyView} />
+    <Drawer.Screen name="MonthlyView" component={MonthlyView} />
+  </Drawer.Navigator>
+  </NavigationContainer>
+  )
 }
