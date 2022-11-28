@@ -17,6 +17,7 @@ import procData from "../services/procData";
 import { Dimensions } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useNavigation } from "@react-navigation/native";
 
 let hourSize = Dimensions.get("window").height / 13.34;
 let selectedDate;
@@ -24,14 +25,43 @@ let choseStart = true;
 let badgeColor = "#485D99";
 
 const AddEventView = (props) => {
-  const [chosenStartDate, setChosenStartDate] = useState(new Date());
-  let endDatePlaceHolder = new Date(new Date().getTime() + 30 * 60000);
+  let key = props.route.params.loggedApt;
 
-  const [chosenEndDate, setChosenEndDate] = useState(endDatePlaceHolder);
-  const [title, onChangeTitle] = React.useState("Event");
-  const [subtitle, onChangeSubtitle] = React.useState("");
-  const [color, setSelectedColor] = useState("#C0392B");
+  let oldData = {
+    title: key.title,
+    subtitle: key.subtitle,
+    start: key.start,
+    end: key.end,
+    color: key.color,
+    activityName: key.activityName,
+  };
+
+  console.log("--------------");
+
+  console.log("KEY " + key.start);
+
+  const [chosenStartDate, setChosenStartDate] = useState(key.start);
+  const [chosenEndDate, setChosenEndDate] = useState(key.end);
+  const [title, onChangeTitle] = React.useState(key.title);
+  const [subtitle, onChangeSubtitle] = React.useState(key.subtitle);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(key.activityName);
+  const [circleColor, setCircleColor] = React.useState(key.color);
+  const [items, setItems] = useState(getActivities());
+
+  let dropdownPlaceholder = "" + key.activityName;
+  let dateKey = new Date(chosenStartDate);
+  dateKey.setHours(0, 0, 0, 0);
+
+  console.log("TEST " + JSON.stringify(props.route.params));
+  console.log("--------------");
+  console.log("TEST2 " + JSON.stringify(props.route.params.loggedApt.start));
+  console.log("appt " + useNavigation("apptData"));
+  console.log("appt2 " + JSON.stringify(useNavigation("apptData")));
+
+  //setChosenStartDate(apptData.start);
+  //setChosenEndDate(apptData.end);
 
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
@@ -59,10 +89,6 @@ const AddEventView = (props) => {
     hideDatePicker();
   };
 
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("Event");
-  const [circleColor, setCircleColor] = React.useState("#485D99");
-
   function getActivities() {
     let arr = [];
     for (let [key, value] of props.route.params.activity) {
@@ -70,11 +96,6 @@ const AddEventView = (props) => {
     }
     return arr;
   }
-
-  const [items, setItems] = useState(getActivities());
-
-  let dateKey = new Date(chosenStartDate);
-  dateKey.setHours(0, 0, 0, 0);
 
   const addEventListener = () => {
     let newData = {
@@ -85,6 +106,8 @@ const AddEventView = (props) => {
       color: circleColor,
     };
 
+    props.route.params.removeData(oldData);
+
     props.route.params.updateData(dateKey, newData);
     props.navigation.navigate("Day", {
       data: props.route.params.loggedData,
@@ -92,6 +115,7 @@ const AddEventView = (props) => {
   };
 
   const removeEventListener = () => {
+    props.route.params.removeData(oldData);
     //props.route.params.removeData(dateKey);
     props.navigation.navigate("Day", {
       data: props.route.params.loggedData,
@@ -138,6 +162,7 @@ const AddEventView = (props) => {
         />
         <TextInput
           underlineColorAndroid={"transparent"}
+          value={title}
           style={styles.input}
           maxLength={25}
           placeholder="Add Title"
@@ -163,8 +188,7 @@ const AddEventView = (props) => {
             textStyle={{
               fontSize: 23,
             }}
-            defaultValue={value}
-            placeholder="Select an Activity"
+            placeholder={dropdownPlaceholder}
             style={styles.dropdown}
             open={open}
             value={value}
