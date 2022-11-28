@@ -1,7 +1,8 @@
+import 'react-native-gesture-handler'
 import * as React from "react";
 import { useState } from "react";
-import { Button, View, Text, StyleSheet } from "react-native";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { Button, View, Text, StyleSheet, TouchableOpacity, Image} from "react-native";
+import { NavigationContainer, getFocusedRouteNameFromRoute, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import MonthlyView from "./components/MonthlyView";
@@ -10,6 +11,7 @@ import AddEventView from "./components/AddEventView";
 import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import * as eva from "@eva-design/eva";
 import {
@@ -352,6 +354,18 @@ function MetricsScreen({ navigation }) {
   );
 }
  */
+const Drawer = createDrawerNavigator();
+function Draw() {
+  return (
+
+    <Drawer.Navigator initialRouteName="Calendar">
+    <Drawer.Screen name="Add Event View" component={AddEventView} />
+    <Drawer.Screen name="Calendar" component={Calendar} />
+    <Drawer.Screen name="MonthlyView" component={MonthlyView} />
+   
+  </Drawer.Navigator>
+  );
+}
 
 let test = "Test";
 
@@ -379,9 +393,20 @@ export default function App() {
 
     setLog(loggedItems);
   };
-
+ 
+  return(
+    <NavigationContainer>
+    <Drawer.Navigator initialRouteName="Calendar">
+    <Drawer.Screen name="Add Event View" component={AddEventView} />
+    <Drawer.Screen name="Daily View" component={DailyView} />
+    <Drawer.Screen name="MonthlyView" component={MonthlyView} />
+  </Drawer.Navigator>
+  </NavigationContainer>
+  )
+/*
   return (
     <NavigationContainer>
+   
       <Tab.Navigator
         initialRouteName="Calendar"
         screenOptions={{ headerShown: false }}
@@ -417,7 +442,11 @@ export default function App() {
           }}
         />
         <Tab.Screen name="Metrics" component={MetricsScreen} />
+        
       </Tab.Navigator>
+      
     </NavigationContainer>
+    
   );
+ */
 }
