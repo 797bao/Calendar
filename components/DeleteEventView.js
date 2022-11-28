@@ -50,6 +50,8 @@ const AddEventView = (props) => {
   const [circleColor, setCircleColor] = React.useState(key.color);
   const [items, setItems] = useState(getActivities());
 
+  let activityNameValue = value;
+
   let dropdownPlaceholder = "" + key.activityName;
   let dateKey = new Date(chosenStartDate);
   dateKey.setHours(0, 0, 0, 0);
@@ -97,13 +99,28 @@ const AddEventView = (props) => {
     return arr;
   }
 
+  function getActivityName(val) {
+    console.log("!!!!!!!!!!!!!!!!!!!!!");
+    for (let i = 0; i < items.length; i++) {
+      console.log(" i.val  " + items[i].value + "     v  " + val);
+      if (items[i].value == val) {
+        return items[i].label;
+      }
+    }
+  }
+
   const addEventListener = () => {
+    console.log("ADD EVENT  ------------------");
+    console.log(value);
+    console.log("ADD EVENT  ------------------");
+    console.log("V--- " + getActivityName(value));
     let newData = {
       title: title,
       subtitle: subtitle,
       start: chosenStartDate,
       end: chosenEndDate,
       color: circleColor,
+      activityName: activityNameValue,
     };
 
     props.route.params.removeData(oldData);
@@ -195,14 +212,15 @@ const AddEventView = (props) => {
             items={items}
             setOpen={setOpen}
             setValue={setValue}
-            onChangeValue={(value) => {
-              setCircleColor(value.slice(1));
+            onChangeValue={(v) => {
+              console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+              console.log("ITEM  --- " + items);
+              console.log("VAL  -- " + getActivityName(v));
+              activityNameValue = getActivityName(v);
+              setCircleColor(v.slice(1));
             }}
             width={Dimensions.get("window").width * 0.6}
             setItems={setItems}
-            onChangeItem={(item) => {
-              console.log("CHANGED");
-            }}
           />
         </View>
 

@@ -32,6 +32,11 @@ const AddEventView = (props) => {
   const [subtitle, onChangeSubtitle] = React.useState("");
   const [color, setSelectedColor] = useState("#C0392B");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("Event");
+  const [circleColor, setCircleColor] = React.useState("#485D99");
+
+  let activityNameValue = value;
 
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
@@ -59,10 +64,6 @@ const AddEventView = (props) => {
     hideDatePicker();
   };
 
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("Event");
-  const [circleColor, setCircleColor] = React.useState("#485D99");
-
   function getActivities() {
     let arr = [];
     for (let [key, value] of props.route.params.activity) {
@@ -77,12 +78,17 @@ const AddEventView = (props) => {
   dateKey.setHours(0, 0, 0, 0);
 
   const addEventListener = () => {
+    console.log(
+      "*$@#(%@*%(@%(@(@*#%(@#*%(#@%(*#@%(*#@(@$(@#*$(@#*$*@#$@*#$@#(*$@#$*(@#$*@#($@#*("
+    );
+    console.log(activityNameValue);
     let newData = {
       title: title,
       subtitle: subtitle,
       start: chosenStartDate,
       end: chosenEndDate,
       color: circleColor,
+      activityName: activityNameValue,
     };
 
     props.route.params.updateData(dateKey, newData);
@@ -97,6 +103,16 @@ const AddEventView = (props) => {
       data: props.route.params.loggedData,
     });
   };
+
+  function getActivityName(val) {
+    console.log("!!!!!!!!!!!!!!!!!!!!!");
+    for (let i = 0; i < items.length; i++) {
+      console.log(" i.val  " + items[i].value + "     v  " + val);
+      if (items[i].value == val) {
+        return items[i].label;
+      }
+    }
+  }
 
   return (
     <SafeAreaView>
@@ -173,6 +189,7 @@ const AddEventView = (props) => {
             setValue={setValue}
             onChangeValue={(value) => {
               setCircleColor(value.slice(1));
+              activityNameValue = getActivityName(v);
             }}
             width={Dimensions.get("window").width * 0.6}
             setItems={setItems}
