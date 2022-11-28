@@ -164,7 +164,7 @@ const AddEventView = (props) => {
               fontSize: 23,
             }}
             defaultValue={value}
-            placeholder="Select an Activity"
+            placeholder="Event"
             style={styles.dropdown}
             open={open}
             value={value}

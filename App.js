@@ -65,18 +65,18 @@ loggedItems.set(
   procData(
     [
       {
-        title: "TEST",
+        title: "BBQ with Friends",
         start: new Date(2022, 10, 27, 2, 21),
         end: new Date(2022, 10, 27, 4, 0),
         color: allActivities.get("Event"),
-        activitityName: "Event",
+        activityName: "Event",
       },
       {
-        title: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+        title: "SE classes",
         start: new Date(2022, 10, 27, 8, 21),
         end: new Date(2022, 10, 27, 12, 20),
         color: allActivities.get("School"),
-        activitityName: "School",
+        activityName: "School",
       },
     ],
     hourSize
@@ -283,15 +283,15 @@ function MetricsScreen({ navigation }) {
             <VictoryBar
               data={[
                 //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
-                { x: "Tue 1", y: 2, fill: "red" },
-                { x: "Wed 2", y: 3, fill: "blue" },
-                { x: "Thu 3", y: 5, fill: "green" },
-                { x: "Fri 4", y: 5, fill: "orange" },
-                { x: "Sat 5", y: 5, fill: "red" },
-                { x: "Sun 6", y: 2, fill: "red" },
-                { x: "Mon 7", y: 3, fill: "blue" },
-                { x: "Tue 8", y: 5, fill: "green" },
-                { x: "Wed 9", y: 5, fill: "orange" },
+                { x: "Tue  1", y: 2, fill: "red" },
+                { x: "Wed  2", y: 3, fill: "blue" },
+                { x: "Thu  3", y: 5, fill: "green" },
+                { x: "Fri  4", y: 5, fill: "orange" },
+                { x: "Sat  5", y: 5, fill: "red" },
+                { x: "Sun  6", y: 2, fill: "red" },
+                { x: "Mon  7", y: 3, fill: "blue" },
+                { x: "Tue  8", y: 5, fill: "green" },
+                { x: "Wed  9", y: 5, fill: "orange" },
                 { x: "Thu 10", y: 5, fill: "red" },
                 { x: "Fri 11", y: 2, fill: "red" },
                 { x: "Sat 12", y: 3, fill: "blue" },
@@ -414,69 +414,54 @@ const styles1 = StyleSheet.create({
   },
 });
 
-/** 
-export default function App() {
-  const [log, setLog] = useState(loggedItems);
-
-  const callbackFunction = (chosenStartDate, childData) => {
-    console.log("CALLBACK ");
-    console.log(" ");
-    console.log(chosenStartDate);
-    console.log(" ");
-
-    if (loggedItems.get(chosenStartDate.toString()) == null) {
-      //if the data doesn't exist
-      //create a new entry for that date and push the data
-      loggedItems.set(
-        chosenStartDate.toString(),
-        procData([childData], hourSize)
-      );
-    } else {
-      loggedItems
-        .get(chosenStartDate.toString())
-        .push(procData([childData], hourSize)[0]);
-    }
-
-    setLog(loggedItems);
-  };
-
-  return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Calendar">
-        <Drawer.Screen name="Add Event View" component={AddEventView} />
-        <Drawer.Screen name="Daily View" component={DailyView} />
-        <Drawer.Screen name="MonthlyView" component={MonthlyView} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
-}
-*/
-
 export default function App() {
   const [log, setLog] = useState(loggedItems);
   const [activities, setActivities] = useState(allActivities);
 
-  const setLoggedItems = (chosenStartDate, childData) => {
-    if (loggedItems.get(chosenStartDate.toString()) == null) {
-      //if the data doesn't exist
-      //create a new entry for that date and push the data
-      loggedItems.set(
-        chosenStartDate.toString(),
-        procData([childData], hourSize)
-      );
-    } else {
-      loggedItems
-        .get(chosenStartDate.toString())
-        .push(procData([childData], hourSize)[0]);
-    }
-    setLog(loggedItems);
-  };
-
+  //user created a new activity
   const pushActivity = (activityName, activityColor) => {
     //add duplication handling
     allActivities.set(activityName, activityColor);
     setActivities(allActivities);
     console.log("ALL ACTIVTIES " + JSON.stringify(allActivities));
+  };
+
+  //user logged an activity
+  const setLoggedItems = (key, childData) => {
+    if (loggedItems.get(key.toString()) == null) {
+      //if the data doesn't exist
+      //create a new entry for that date and push the data
+      loggedItems.set(key.toString(), procData([childData], hourSize));
+    } else {
+      loggedItems.get(key.toString()).push(procData([childData], hourSize)[0]);
+    }
+    setLog(loggedItems);
+  };
+
+  //user deleted an activity
+  const deleteLoggedItem = (dataToDelete) => {
+    let key = new Date(
+      dataToDelete.start.getFullYear(),
+      dataToDelete.start.getMonth(),
+      dataToDelete.start.getDate()
+    );
+    key.setHours(0, 0, 0, 0);
+    key = key.toString();
+
+    let mappedData = loggedItems.get(key);
+    for (let i = 0; i < mappedData.length; i++) {
+      if (
+        mappedData[i].start == dataToDelete.start &&
+        mappedData[i].end == dataToDelete.end &&
+        mappedData[i].activity == dataToDelete.activity &&
+        mappedData[i].title == dataToDelete.title &&
+        mappedData[i].subtitle == dataToDelete.subtitle
+      ) {
+        mappedData.splice(i, 1);
+      }
+      console.log("mapped Data");
+      console.log(JSON.stringify(mappedData));
+    }
   };
 
   function drawers() {
@@ -496,7 +481,7 @@ export default function App() {
         <Drawer.Screen name="Month" component={MonthlyView} />
 
         <Drawer.Screen
-          name="CrateActivityView"
+          name="Create Activity"
           component={CreateActivityView}
           options={{ headerShown: false }}
           initialParams={{
@@ -553,6 +538,7 @@ export default function App() {
                     activity: activities,
                     loggedData: log,
                     updateData: setLoggedItems,
+                    removeData: deleteLoggedItem,
                   }}
                 />
                 {(props) => (

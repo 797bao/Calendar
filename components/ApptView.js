@@ -23,6 +23,7 @@ const ApptView = ({
   const color = tinycolor(appt.color).isValid()
     ? tinycolor(appt.color).toHexString()
     : Colors.red;
+
   const margin = hrsToStart(appt.start, topTime) * hour_size;
   const pan = useRef(new Animated.ValueXY()).current;
   const panResponder = useRef(
@@ -63,7 +64,8 @@ const ApptView = ({
         <TouchableOpacity
           onPress={() => {
             console.log("PRESS");
-            navigation.navigate("DeleteEventView", dataArray);
+            console.log("------------------ " + JSON.stringify(appt));
+            navigation.navigate("DeleteEventView", { loggedApt: appt });
           }}
           style={{ margin: 0, padding: 0, flex: 1 }}
         >
