@@ -101,45 +101,8 @@ export default class DailyView extends React.Component {
     };
   }
 
-  //the carousel's data to render
-  /**
-  _renderItem({ item, index }) {
-    let datesInMap = dataItems.get(item.toString());
-    return (
-      <View
-        style={{
-          backgroundColor: "#fff",
-          borderRadius: 5,
-          height: Dimensions.get("screen").height * 0.85,
-          padding: 0,
-        }}
-      >
-        <View style={styles.container}>
-          <SmartScroll hour_size={hourSize}>
-            <View style={styles.body}>
-              <View style={styles.hour_col} >
-                <TimeCol hour_size={hourSize} />
-              </View>
-              <View style={styles.schedule_col} >
-                <DrawnGrid></DrawnGrid>
-                <NowBar hour_size={hourSize} />
-                {!!datesInMap && (
-                  //<ScheduledData dataArray={dataItems.get(item.toString())} />
-                  <ScheduledData
-                    dataArray={dataItems.get(item.toString())}
-                    navigation={this.props.navigation}
-                  />
-                )}
-              </View>
-            </View>
-          </SmartScroll>
-        </View>
-      </View>
-    );
-  }
-  */
-
   render() {
+    console.log("DAILY VIEW re-RENDER");
     return (
       <ContextProvider
         hour_size={
@@ -236,12 +199,15 @@ export default class DailyView extends React.Component {
                         else prependToList(index); //swiping left
                       }
                       context.setDate(carousel[index]);
+                      console.log("SETTING STATE BEFORE SNAP ");
                       this.setState({ activeIndex: index });
                     }}
                   />
                   <TouchableOpacity
                     onPress={() =>
-                      this.props.navigation.navigate("AddEventView")
+                      this.props.navigation.navigate("AddEventView", {
+                        day: carousel[this.state.activeIndex],
+                      })
                     }
                     activeOpacity={0.5}
                     style={DayStyle.TouchableOpacityStyle}

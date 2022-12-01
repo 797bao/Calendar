@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  MaskedViewComponent,
 } from "react-native";
 import {
   NavigationContainer,
@@ -23,6 +24,7 @@ import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateActivityView from "./components/CreateActivityView";
+import MetricsView from "./components/MetricsView";
 
 import * as eva from "@eva-design/eva";
 import {
@@ -33,6 +35,7 @@ import {
 import AllJournals from "./components/AllJournals";
 import CreateNote from "./components/CreateNote";
 import Note from "./components/Note";
+import Svg from "react-native-svg";
 import { StackedBarChart, Grid, YAxis, XAxis } from "react-native-svg-charts";
 import {
   VictoryBar,
@@ -48,6 +51,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import Header from "./components/MetricsHeader";
+import { PropTypes } from "prop-types";
+import Colors from "./constants/colors";
 
 let hourSize = Dimensions.get("window").height / 13.34;
 const { Navigator, Screen } = createBottomTabNavigator();
@@ -55,10 +61,13 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const loggedItems = new Map();
 const allActivities = new Map();
+let activityTotals = new Map();
 
 //default activity is called Event
 allActivities.set("Event", "#485D99");
 allActivities.set("School", "#9e3c31");
+allActivities.set("Gym", "#487B1F");
+allActivities.set("Cardio", "#E5AF36");
 
 loggedItems.set(
   new Date(2022, 10, 27).toString(),
@@ -169,78 +178,210 @@ function Draw() {
   );
 }
 
-const graphicColor = ["red", "orange", "green", "blue"];
+function getDaysInMonth(year, month) {
+  return new Date(year, month, 0).getDate();
+}
+
+const graphicColor = ["#9e3c31", "#E5AF36", "#487B1F", "#485D99"];
 let barHeight = Dimensions.get("window").height / 23; //23 bars for the whole window
 
+function getDayName(dayNo) {
+  const date = new Date();
+  date.setDate(dayNo - 1);
+  return date.toLocaleString("en-US", { weekday: "short" });
+}
+
+let initialData = [];
+
 function displayMonthBars(month, year) {
-  //0 = jan, dec = 11
   let days = getDaysInMonth(month, year);
-  let output = new Array(5);
+  //console.log("--------------------DAyS--------");
 
-  for (let i = 0; i < days.length; i++) {
-    let key = days[i].toString();
+  let output = [];
+  activityTotals = new Map();
+  initialData = [];
+
+  for (let i = 0; i < days; i++) {
+    let d = new Date(year, month, i + 1);
+    let key = d.toString();
+    let dayNameShort = "" + getDayName(d.getDay());
+    //console.log("DAYA SDAGDASFD  - - " + dayNameShort);
+    dayNameShort = dayNameShort.substring(0, 3);
+    let xName = "";
+    if (d.getDate() >= 10) {
+      xName = dayNameShort + " " + d.getDate();
+    } else {
+      xName = dayNameShort + "  " + d.getDate();
+    }
+    initialData.push({ x: xName, y: 0 });
+
+    ////console.log("KEY " + key);
     if (loggedItems.has(key)) {
-      //check each day
-      let allEntryForDay = loggedItems.get(key);
+      let arr = loggedItems.get(key);
+      let map = new Map();
+      for (let x = 0; x < arr.length; x++) {
+        //console.log("ELE  " + JSON.stringify(arr[x]));
+        let currentActivity = arr[x].color;
+        let endTime = arr[x].end.getHours() * 60 + arr[x].end.getMinutes();
+        let startTime =
+          arr[x].start.getHours() * 60 + arr[x].start.getMinutes();
+        let totalHrs = (endTime - startTime) / 60;
+        //console.log("TOTAL HRS " + totalHrs);
 
-      for (
-        let x = 0;
-        x < allEntryForDay;
-        x++ //check every logged item in the day
-      ) {
-        //accumulate the sums of each items activity
+        if (map.has(currentActivity)) {
+          map.set(currentActivity, map.get(currentActivity) + totalHrs);
+          //console.log("GET " + map.get(currentActivity));
+          //console.log("MAP " + JSON.stringify(map));
+        }
+        //there exists a similar logged activity
+
+        //initial
+        else {
+          map.set(currentActivity, totalHrs);
+          //console.log("GET " + map.get(currentActivity));
+          //console.log("MAP " + JSON.stringify(map));
+        }
+
+        if (activityTotals.has(currentActivity))
+          activityTotals.set(
+            currentActivity,
+            activityTotals.get(currentActivity) + totalHrs
+          );
+        else activityTotals.set(currentActivity, totalHrs);
+      }
+
+      let counter = 0;
+      for (let [key, value] of map) {
+        let newObj = { x: xName, y: value, fill: key };
+        if (output.length <= counter) {
+          output.push([newObj]);
+        } else {
+          output[counter].push(newObj);
+        }
+        counter++;
       }
     }
-    console.log("DAY " + days[i]);
-    console.log("DAY --- " + days[i].toString());
-    /**
-    if (loggedItems.get(days[i]).toString() !== undefined) {
-      console.log("GOT ");
-      console.log(loggedItems.get(days[i].toString()));
-    }
-     */
   }
+
+  for (let [key, value] of activityTotals) {
+    let roundedValue = Math.round(value * 10) / 10;
+    activityTotals.set(key, roundedValue);
+  }
+  return output;
 }
 
-function getMonthShortName(monthNo) {
-  const date = new Date();
-  date.setMonth(monthNo - 1);
-  return date.toLocaleString("en-US", { month: "short" });
-}
+function renderStack() {
+  const arr = displayMonthBars(10, 2022);
+  arr.unshift(initialData);
 
-function getDaysInMonth(month, year) {
-  var date = new Date(year, month, 1);
-  var days = [];
-  while (date.getMonth() === month) {
-    days.push(new Date(date));
-    date.setDate(date.getDate() + 1);
-  }
-  return days;
+  return arr.map((obj, index) => {
+    const key = index;
+    //console.log("HOW MANY TIMES");
+
+    return (
+      <VictoryBar
+        data={arr[index]}
+        labels={({ datum }) => {
+          if (datum.y != 0) {
+            let ret = Math.round(datum.y * 10) / 10;
+            if (datum.y >= 1) return ret;
+            else return ("" + ret).slice(1);
+          }
+        }}
+        barRatio={0.75}
+        labelComponent={
+          <VictoryLabel
+            dx={({ data, index }) => {
+              return -data[index].y * 25;
+            }}
+            style={{
+              fill: "white",
+              fontSize: 17,
+            }}
+          />
+        }
+        style={{
+          data: {
+            fill: ({ datum }) => datum.fill,
+          },
+        }}
+        //color="#9e3c31"
+      />
+    );
+  });
 }
 
 function MetricsScreen({ navigation }) {
-  displayMonthBars(10, 2022); //nov 2022
+  displayMonthBars(10, 2022); //pie data
+  let pieData = [];
+
+  let graphicColor = [];
+  let total = 0;
+
+  for (let [key, value] of activityTotals) {
+    pieData.push({ x: "" + value, y: value, fill: key });
+    graphicColor.push(key);
+    total += value;
+  }
+  total = Math.round(total * 10) / 10;
+
   return (
     <SafeAreaView>
-      <VictoryPie
-        data={[
-          { x: "10", y: 10 },
-          { x: "11", y: 11 },
-          { x: "8", y: 8 },
-          { x: "4", y: 4 },
-        ]}
-        labelRadius={({ innerRadius }) => innerRadius + 4}
-        width={width}
-        height={250}
-        colorScale={graphicColor}
-        innerRadius={45}
-        style={{
-          labels: { fill: "white", fontSize: 20, fontFamily: "Courier" },
-        }}
+      <Header
+        status_bar={PropTypes.bool}
+        accent={Colors.blue}
+        left_icon={PropTypes.node}
+        header_color={Colors.light_gray}
       />
+      <Svg
+        width={width}
+        height={220}
+        viewBox="0 0 400 400"
+        style={{ width: "100%", height: "auto" }}
+      >
+        <VictoryPie
+          data={pieData}
+          labels={({ datum }) => {
+            if (datum.y != 0) return datum.y;
+            else return "";
+          }}
+          padding={50}
+          width={width}
+          height={220}
+          colorScale={graphicColor}
+          innerRadius={45}
+          style={{
+            padding: -20,
+            margin: -20,
+            labels: {
+              fill: (d) => d.datum.fill,
+              fontSize: 23,
+              fontFamily: "Courier",
+            },
+          }}
+        />
+        <VictoryLabel
+          textAnchor="middle"
+          style={{ fontSize: 40 }}
+          x={200}
+          y={200}
+          text={total + "\nHours"}
+        />
+      </Svg>
+
+      <Text
+        style={{
+          alignSelf: "center",
+          fontSize: 15.5,
+          color: "gray",
+          fontWeight: "bold",
+        }}
+      >
+        {"Hours"}
+      </Text>
       <ScrollView
         contentContainerStyle={{
-          paddingBottom: 220, //needs to be variable
+          paddingBottom: 250, //needs to be variable
         }}
       >
         <VictoryChart
@@ -249,20 +390,6 @@ function MetricsScreen({ navigation }) {
           padding={{ left: 90, right: 40, top: 30 }}
           domainPadding={{ x: 25 }}
         >
-          <VictoryAxis
-            invertAxis={true}
-            dependentAxis={false}
-            style={{
-              axis: { stroke: "#756f6a" },
-              tickLabels: {
-                fontSize: 16.5,
-                padding: 12,
-                //fontWeight: "bold",
-                fontFamily: "Courier",
-                fill: "#171717",
-              },
-            }}
-          />
           <VictoryAxis
             color="gray"
             orientation="top"
@@ -278,126 +405,23 @@ function MetricsScreen({ navigation }) {
               },
             }}
           />
+          <VictoryAxis
+            invertAxis={true}
+            dependentAxis={false}
+            style={{
+              axis: { stroke: "#756f6a" },
+              tickLabels: {
+                fontSize: 16.5,
+                padding: 12,
+                //fontWeight: "bold",
+                fontFamily: "Courier",
+                fill: "#171717",
+              },
+            }}
+          />
           <VictoryAxis tickFormat={(x) => ``} />
           <VictoryStack sortOrder="ascending" horizontal>
-            <VictoryBar
-              data={[
-                //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
-                { x: "Tue  1", y: 2, fill: "red" },
-                { x: "Wed  2", y: 3, fill: "blue" },
-                { x: "Thu  3", y: 5, fill: "green" },
-                { x: "Fri  4", y: 5, fill: "orange" },
-                { x: "Sat  5", y: 5, fill: "red" },
-                { x: "Sun  6", y: 2, fill: "red" },
-                { x: "Mon  7", y: 3, fill: "blue" },
-                { x: "Tue  8", y: 5, fill: "green" },
-                { x: "Wed  9", y: 5, fill: "orange" },
-                { x: "Thu 10", y: 5, fill: "red" },
-                { x: "Fri 11", y: 2, fill: "red" },
-                { x: "Sat 12", y: 3, fill: "blue" },
-                { x: "Sun 13", y: 5, fill: "green" },
-                { x: "Mon 14", y: 5, fill: "orange" },
-                { x: "Tue 15", y: 5, fill: "red" },
-                { x: "Wed 16", y: 2, fill: "red" },
-                { x: "Thu 17", y: 3, fill: "blue" },
-                { x: "Fri 18", y: 5, fill: "green" },
-                { x: "Sat 19", y: 5, fill: "orange" },
-                { x: "Sun 20", y: 5, fill: "red" },
-                { x: "Mon 21", y: 5, fill: "red" },
-                { x: "Tue 22", y: 2, fill: "red" },
-                { x: "Wed 23", y: 3, fill: "blue" },
-                { x: "Thu 24", y: 5, fill: "green" },
-                { x: "Fri 25", y: 5, fill: "orange" },
-                { x: "Sat 26", y: 5, fill: "red" },
-                { x: "Sun 27", y: 2, fill: "red" },
-                { x: "Mon 28", y: 3, fill: "blue" },
-                { x: "Tue 29", y: 5, fill: "green" },
-                { x: "Thu 30", y: 5, fill: "orange" },
-                { x: "Fri 31", y: 5, fill: "red" },
-              ]}
-              labels={({ datum }) => {
-                if (datum.y != 0) return datum.y;
-                else return "";
-              }}
-              barRatio={0.75}
-              labelComponent={
-                <VictoryLabel
-                  dx={({ data, index }) => {
-                    return -data[index].y * 17;
-                  }}
-                  style={{
-                    fill: "white",
-                    fontSize: 17,
-                  }}
-                />
-              }
-              style={{
-                data: {
-                  fill: ({ datum }) => datum.fill,
-                },
-              }}
-              //color="red"
-            />
-            <VictoryBar
-              data={[
-                //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
-                { x: "Tue 1", y: 4, fill: "orange" },
-                { x: "Thu 3", y: 2, fill: "red" },
-              ]}
-              labels={({ datum }) => {
-                if (datum.y != 0) return datum.y;
-                else return "";
-              }}
-              barRatio={0.75}
-              labelComponent={
-                <VictoryLabel
-                  dx={({ data, index }) => {
-                    return -data[index].y * 17;
-                  }}
-                  style={{
-                    fill: "white",
-                    fontSize: 17,
-                  }}
-                />
-              }
-              style={{
-                data: {
-                  fill: ({ datum }) => datum.fill,
-                },
-              }}
-              //color="red"
-            />
-            <VictoryBar
-              data={[
-                //day 21, activity(red), count, //day 21, activity(red), count-3, //day 21, activity(red), count-3
-                { x: "Tue 1", y: 1, fill: "blue" },
-                { x: "Wed 2", y: 1, fill: "red" },
-                { x: "Thu 3", y: 2, fill: "orange" },
-                { x: "Fri 4", y: 3, fill: "green" },
-              ]}
-              labels={({ datum }) => {
-                if (datum.y != 0) return datum.y;
-                else return "";
-              }}
-              barRatio={0.75}
-              labelComponent={
-                <VictoryLabel
-                  dx={({ data, index }) => {
-                    return -data[index].y * 17;
-                  }}
-                  style={{
-                    fill: "white",
-                    fontSize: 17,
-                  }}
-                />
-              }
-              style={{
-                data: {
-                  fill: ({ datum }) => datum.fill,
-                },
-              }}
-              //color="red"
-            />
+            {renderStack()}
           </VictoryStack>
         </VictoryChart>
       </ScrollView>
@@ -415,6 +439,7 @@ const styles1 = StyleSheet.create({
 });
 
 export default function App() {
+  console.disableYellowBox = true; //disable warnings of node_modules using deprecated dependencies
   const [log, setLog] = useState(loggedItems);
   const [activities, setActivities] = useState(allActivities);
 
@@ -423,7 +448,7 @@ export default function App() {
     //add duplication handling
     allActivities.set(activityName, activityColor);
     setActivities(allActivities);
-    console.log("ALL ACTIVTIES " + JSON.stringify(allActivities));
+    //console.log("ALL ACTIVTIES " + JSON.stringify(allActivities));
   };
 
   //user logged an activity
@@ -448,7 +473,8 @@ export default function App() {
     key.setHours(0, 0, 0, 0);
     key = key.toString();
 
-    let mappedData = loggedItems.get(key);
+    let mappedData = this.state.log.get(key);
+    console.log(this.state.log.get(key));
     for (let i = 0; i < mappedData.length; i++) {
       if (
         mappedData[i].start == dataToDelete.start &&
@@ -459,8 +485,8 @@ export default function App() {
       ) {
         mappedData.splice(i, 1);
       }
-      console.log("mapped Data");
-      console.log(JSON.stringify(mappedData));
+      //console.log("mapped Data");
+      //console.log(JSON.stringify(mappedData));
     }
   };
 
@@ -514,7 +540,7 @@ export default function App() {
                 <Stack.Screen name="Drawer" component={drawers} />
                 <Drawer.Screen name="Month" component={MonthlyView} />
                 <Stack.Screen
-                  name="CrateActivityView"
+                  name="CreateActivityView"
                   component={CreateActivityView}
                   options={{ headerShown: false }}
                   initialParams={{
@@ -548,7 +574,27 @@ export default function App() {
             );
           }}
         />
-        <Tab.Screen name="Metrics" component={MetricsScreen} />
+        <Tab.Screen
+          name="Metrics"
+          component={function metric() {
+            return (
+              <Stack.Navigator
+                initialRouteName="Metric"
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen
+                  name="Metric"
+                  component={MetricsView}
+                  initialParams={{
+                    loggedData: log,
+                  }}
+                />
+              </Stack.Navigator>
+            );
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

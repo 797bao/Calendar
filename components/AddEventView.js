@@ -24,8 +24,19 @@ let choseStart = true;
 let badgeColor = "#485D99";
 
 const AddEventView = (props) => {
-  const [chosenStartDate, setChosenStartDate] = useState(new Date());
-  let endDatePlaceHolder = new Date(new Date().getTime() + 30 * 60000);
+  let pageDay = props.route.params.day;
+  let currentHour = new Date().getHours();
+  let currentMinutes = new Date().getMinutes();
+  let newStartDate = new Date(
+    pageDay.getFullYear(),
+    pageDay.getMonth(),
+    pageDay.getDate(),
+    currentHour,
+    currentMinutes
+  );
+
+  const [chosenStartDate, setChosenStartDate] = useState(newStartDate);
+  let endDatePlaceHolder = new Date(newStartDate.getTime() + 30 * 60000);
 
   const [chosenEndDate, setChosenEndDate] = useState(endDatePlaceHolder);
   const [title, onChangeTitle] = React.useState("Event");
@@ -189,7 +200,7 @@ const AddEventView = (props) => {
             setValue={setValue}
             onChangeValue={(value) => {
               setCircleColor(value.slice(1));
-              activityNameValue = getActivityName(v);
+              activityNameValue = getActivityName(value);
             }}
             width={Dimensions.get("window").width * 0.6}
             setItems={setItems}
@@ -204,7 +215,7 @@ const AddEventView = (props) => {
             mode="contained"
             style={styles.ActivityButton}
             onPress={() => {
-              props.navigation.navigate("CreateActivityView");
+              props.navigation.navigate("Create Activity");
             }}
           >
             Create New Activity

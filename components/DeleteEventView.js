@@ -229,7 +229,7 @@ const AddEventView = (props) => {
             mode="contained"
             style={styles.ActivityButton}
             onPress={() => {
-              props.navigation.navigate("CreateActivityView");
+              props.navigation.navigate("Create Activity");
             }}
           >
             Create New Activity
