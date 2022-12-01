@@ -124,8 +124,8 @@ export default function App() {
     key.setHours(0, 0, 0, 0);
     key = key.toString();
 
-    let mappedData = this.state.log.get(key);
-    console.log(this.state.log.get(key));
+    let mappedData = log.get(key);
+    console.log(log.get(key));
     for (let i = 0; i < mappedData.length; i++) {
       if (
         mappedData[i].start == dataToDelete.start &&

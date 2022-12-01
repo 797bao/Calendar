@@ -13,7 +13,6 @@ import { AppContext } from "./ContextProvider";
 import tinycolor from "tinycolor2";
 import styles from "./headerStyles";
 import moment from "moment";
-import CreateActivityView from "./CreateActivityView";
 
 const Header = ({
   header_color,

@@ -7,8 +7,6 @@ import {
   Image,
   MaskedViewComponent,
 } from "react-native";
-
-import { StackedBarChart, Grid, YAxis, XAxis } from "react-native-svg-charts";
 import {
   VictoryBar,
   VictoryChart,
