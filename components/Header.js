@@ -43,8 +43,9 @@ const Header = ({
             <View style={styles.text_row}>
               {left_icon}
               <TouchableOpacity
-                onClick={() => this.props.navigation.openDrawer()
-                  //navigation.navigate("MonthView")
+                onClick={() => navigation.navigate("MonthView")
+                  //this.props.navigation.openDrawer()
+                
                 }
               >
                 <Image

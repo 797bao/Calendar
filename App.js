@@ -394,7 +394,7 @@ export default function App() {
     setLog(loggedItems);
   };
  
-  return(
+  /* return(
     <NavigationContainer>
     <Drawer.Navigator initialRouteName="Calendar">
     <Drawer.Screen name="Add Event View" component={AddEventView} />
@@ -403,7 +403,8 @@ export default function App() {
   </Drawer.Navigator>
   </NavigationContainer>
   )
-/*
+  */
+
   return (
     <NavigationContainer>
    
@@ -448,5 +449,5 @@ export default function App() {
     </NavigationContainer>
     
   );
- */
+
 }
