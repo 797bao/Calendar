@@ -53,9 +53,9 @@ const CreateActivityView = (props) => {
   const [activityName, setActivityName] = React.useState("");
 
   const saveActivityListener = () => {
-    console.log("Add activity");
-    console.log("Activity name: " + activityName);
-    console.log("Activity color: " + color);
+    //console.log("Add activity");
+    //console.log("Activity name: " + activityName);
+    //console.log("Activity color: " + color);
     props.route.params.updateData(activityName, color);
     props.navigation.navigate("Day");
   };
@@ -66,7 +66,7 @@ const CreateActivityView = (props) => {
         <TouchableOpacity
           style={styles.xButton}
           onPress={() => {
-            console.log("ON PRSS ");
+            //console.log("ON PRSS ");
             props.navigation.navigate("Day");
           }}
         >

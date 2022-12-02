@@ -36,9 +36,9 @@ const AddEventView = (props) => {
     activityName: key.activityName,
   };
 
-  console.log("--------------");
+  //console.log("--------------");
 
-  console.log("KEY " + key.start);
+  //console.log("KEY " + key.start);
 
   const [chosenStartDate, setChosenStartDate] = useState(key.start);
   const [chosenEndDate, setChosenEndDate] = useState(key.end);
@@ -56,11 +56,11 @@ const AddEventView = (props) => {
   let dateKey = new Date(chosenStartDate);
   dateKey.setHours(0, 0, 0, 0);
 
-  console.log("TEST " + JSON.stringify(props.route.params));
-  console.log("--------------");
-  console.log("TEST2 " + JSON.stringify(props.route.params.loggedApt.start));
-  console.log("appt " + useNavigation("apptData"));
-  console.log("appt2 " + JSON.stringify(useNavigation("apptData")));
+  //console.log("TEST " + JSON.stringify(props.route.params));
+  //console.log("--------------");
+  //console.log("TEST2 " + JSON.stringify(props.route.params.loggedApt.start));
+  //console.log("appt " + useNavigation("apptData"));
+  //console.log("appt2 " + JSON.stringify(useNavigation("apptData")));
 
   //setChosenStartDate(apptData.start);
   //setChosenEndDate(apptData.end);
@@ -72,21 +72,21 @@ const AddEventView = (props) => {
   const handleConfirm = (date) => {
     if (choseStart) {
       setChosenStartDate(date);
-      console.log(date + " ");
-      console.log("end " + chosenEndDate);
+      //console.log(date + " ");
+      //console.log("end " + chosenEndDate);
       if (date > chosenEndDate) {
-        console.log("date > chosenEndDate");
+        //console.log("date > chosenEndDate");
         let newEndDate = new Date(date.getTime() + 30 * 60000);
         setChosenEndDate(newEndDate);
       }
-      console.log("CHOES STARt");
+      //console.log("CHOES STARt");
     } else {
       setChosenEndDate(date);
       if (date < chosenStartDate) {
         let newEndDate = new Date(date.getTime() - 30 * 60000);
         setChosenEndDate(newEndDate);
       }
-      console.log("CHOES end");
+      //console.log("CHOES end");
     }
     hideDatePicker();
   };
@@ -100,9 +100,9 @@ const AddEventView = (props) => {
   }
 
   function getActivityName(val) {
-    console.log("!!!!!!!!!!!!!!!!!!!!!");
+    //console.log("!!!!!!!!!!!!!!!!!!!!!");
     for (let i = 0; i < items.length; i++) {
-      console.log(" i.val  " + items[i].value + "     v  " + val);
+      //console.log(" i.val  " + items[i].value + "     v  " + val);
       if (items[i].value == val) {
         return items[i].label;
       }
@@ -110,10 +110,10 @@ const AddEventView = (props) => {
   }
 
   const addEventListener = () => {
-    console.log("ADD EVENT  ------------------");
-    console.log(value);
-    console.log("ADD EVENT  ------------------");
-    console.log("V--- " + getActivityName(value));
+    //console.log("ADD EVENT  ------------------");
+    //console.log(value);
+    //console.log("ADD EVENT  ------------------");
+    //console.log("V--- " + getActivityName(value));
     let newData = {
       title: title,
       subtitle: subtitle,
@@ -145,7 +145,7 @@ const AddEventView = (props) => {
         <TouchableOpacity
           style={styles.xButton}
           onPress={() => {
-            console.log("ON PRSS ");
+            //console.log("ON PRSS ");
             props.navigation.navigate("Day");
           }}
         >
@@ -213,9 +213,9 @@ const AddEventView = (props) => {
             setOpen={setOpen}
             setValue={setValue}
             onChangeValue={(v) => {
-              console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-              console.log("ITEM  --- " + items);
-              console.log("VAL  -- " + getActivityName(v));
+              //console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+              //console.log("ITEM  --- " + items);
+              //console.log("VAL  -- " + getActivityName(v));
               activityNameValue = getActivityName(v);
               setCircleColor(v.slice(1));
             }}

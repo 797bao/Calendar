@@ -56,21 +56,21 @@ const AddEventView = (props) => {
   const handleConfirm = (date) => {
     if (choseStart) {
       setChosenStartDate(date);
-      console.log(date + " ");
-      console.log("end " + chosenEndDate);
+      //console.log(date + " ");
+      //console.log("end " + chosenEndDate);
       if (date > chosenEndDate) {
-        console.log("date > chosenEndDate");
+        //console.log("date > chosenEndDate");
         let newEndDate = new Date(date.getTime() + 30 * 60000);
         setChosenEndDate(newEndDate);
       }
-      console.log("CHOES STARt");
+      //console.log("CHOES STARt");
     } else {
       setChosenEndDate(date);
       if (date < chosenStartDate) {
         let newEndDate = new Date(date.getTime() - 30 * 60000);
         setChosenEndDate(newEndDate);
       }
-      console.log("CHOES end");
+      //console.log("CHOES end");
     }
     hideDatePicker();
   };
@@ -89,10 +89,7 @@ const AddEventView = (props) => {
   dateKey.setHours(0, 0, 0, 0);
 
   const addEventListener = () => {
-    console.log(
-      "*$@#(%@*%(@%(@(@*#%(@#*%(#@%(*#@%(*#@(@$(@#*$(@#*$*@#$@*#$@#(*$@#$*(@#$*@#($@#*("
-    );
-    console.log(activityNameValue);
+    //console.log(activityNameValue);
     let newData = {
       title: title,
       subtitle: subtitle,
@@ -116,9 +113,9 @@ const AddEventView = (props) => {
   };
 
   function getActivityName(val) {
-    console.log("!!!!!!!!!!!!!!!!!!!!!");
+    //console.log("!!!!!!!!!!!!!!!!!!!!!");
     for (let i = 0; i < items.length; i++) {
-      console.log(" i.val  " + items[i].value + "     v  " + val);
+      //console.log(" i.val  " + items[i].value + "     v  " + val);
       if (items[i].value == val) {
         return items[i].label;
       }
@@ -131,7 +128,7 @@ const AddEventView = (props) => {
         <TouchableOpacity
           style={styles.xButton}
           onPress={() => {
-            console.log("ON PRSS ");
+            //console.log("ON PRSS ");
             props.navigation.navigate("Day");
           }}
         >
@@ -205,7 +202,7 @@ const AddEventView = (props) => {
             width={Dimensions.get("window").width * 0.6}
             setItems={setItems}
             onChangeItem={(item) => {
-              console.log("CHANGED");
+              //console.log("CHANGED");
             }}
           />
         </View>

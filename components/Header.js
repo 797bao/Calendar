@@ -45,7 +45,7 @@ const Header = ({
               {left_icon}
               <TouchableOpacity
                 onPress={() => {
-                  console.log("DRAWER");
+                  //console.log("DRAWER");
                   navigation.openDrawer();
                 }}
               >

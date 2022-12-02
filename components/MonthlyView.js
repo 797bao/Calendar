@@ -80,7 +80,7 @@ function initializeDaysForMonth(firstDayOfMonth) {
 //the generated data is displayed in a horizontal flatlist
 export default function MonthlyView() {
   const pressDay = (day) => {
-    console.log("PRESSED " + months[0]); //TODO: for Farzin, implement the routes
+    //console.log("PRESSED " + months[0]); //TODO: for Farzin, implement the routes
   };
 
   const [month, setMonth] = useState(months[0]);

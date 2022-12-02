@@ -63,8 +63,8 @@ const ApptView = ({
       >
         <TouchableOpacity
           onPress={() => {
-            console.log("PRESS");
-            console.log("------------------ " + JSON.stringify(appt));
+            //console.log("PRESS");
+            //console.log("------------------ " + JSON.stringify(appt));
             navigation.navigate("DeleteEventView", { loggedApt: appt });
           }}
           style={{ margin: 0, padding: 0, flex: 1 }}

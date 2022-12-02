@@ -10,7 +10,7 @@ const ScheduledData = ({ dataArray, onEventPress, navigation }) => (
     {(context) => {
       if (!dataArray) dataArray = [];
       const data = procRows(dataArray, context.date);
-      console.log("nav " + navigation);
+      //console.log("nav " + navigation);
       return (
         <View
           style={

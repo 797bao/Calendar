@@ -8,7 +8,7 @@ import DailyView from "./components/DailyView";
 import AddEventView from "./components/AddEventView";
 import DeleteEventView from "./components/DeleteEventView";
 import procData from "./services/procData";
-import { Dimensions } from "react-native";
+import { Dimensions, LogBox } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateActivityView from "./components/CreateActivityView";
 import MetricsView from "./components/MetricsView";
@@ -82,6 +82,7 @@ const TabNavigator = () => (
 );
 
 function JournalScreen({ navigation }) {
+  console.log("JOURNAL SCREEN RE-RENDER");
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
       <TabNavigator />
@@ -90,7 +91,7 @@ function JournalScreen({ navigation }) {
 }
 
 export default function App() {
-  console.disableYellowBox = true; //disable warnings of node_modules using deprecated dependencies
+  LogBox.ignoreAllLogs(true); //disable warnings of node_modules using deprecated dependencies
   const [log, setLog] = useState(loggedItems);
   const [activities, setActivities] = useState(allActivities);
 
@@ -99,7 +100,7 @@ export default function App() {
     //add duplication handling
     allActivities.set(activityName, activityColor);
     setActivities(allActivities);
-    //console.log("ALL ACTIVTIES " + JSON.stringify(allActivities));
+    ////console.log("ALL ACTIVTIES " + JSON.stringify(allActivities));
   };
 
   //user logged an activity
@@ -112,6 +113,7 @@ export default function App() {
       loggedItems.get(key.toString()).push(procData([childData], hourSize)[0]);
     }
     setLog(loggedItems);
+    console.log("SET LOG ");
   };
 
   //user deleted an activity
@@ -125,7 +127,7 @@ export default function App() {
     key = key.toString();
 
     let mappedData = log.get(key);
-    console.log(log.get(key));
+    //console.log(log.get(key));
     for (let i = 0; i < mappedData.length; i++) {
       if (
         mappedData[i].start == dataToDelete.start &&
@@ -139,7 +141,7 @@ export default function App() {
     }
   };
 
-  function drawers() {
+  function Drawers() {
     return (
       <Drawer.Navigator
         initialRouteName="Day"
@@ -179,6 +181,7 @@ export default function App() {
         <Tab.Screen
           name="Calendar"
           component={function CalendarScreen() {
+            console.log("CALENDAR SCREEN Re-render");
             return (
               <Stack.Navigator
                 initialRouteName="Day"
@@ -186,7 +189,7 @@ export default function App() {
                   headerShown: false,
                 }}
               >
-                <Stack.Screen name="Drawer" component={drawers} />
+                <Stack.Screen name="Drawer" component={Drawers} />
                 <Drawer.Screen name="Month" component={MonthlyView} />
                 <Stack.Screen
                   name="CreateActivityView"
@@ -225,7 +228,8 @@ export default function App() {
         />
         <Tab.Screen
           name="Metrics"
-          component={function metric() {
+          component={function Metric() {
+            console.log("METRIC SCREEN Re-render");
             return (
               <Stack.Navigator
                 initialRouteName="Metric"

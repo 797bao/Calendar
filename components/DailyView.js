@@ -87,14 +87,38 @@ function mod(n, m) {
 let dataItems;
 let navProp;
 
+/** 
+export default class DailyView extends React.Component {
+  render() {
+    //console.log("DAILY VIEW re-render");
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate("AddEventView", {
+            day: new Date(),
+          })
+        }
+        activeOpacity={0.5}
+        style={DayStyle.TouchableOpacityStyle}
+      >
+        <Image
+          source={require("../icons/AddButton.png")}
+          style={DayStyle.TouchableOpacityStyle}
+        />
+      </TouchableOpacity>
+    );
+  }
+}
+*/
+
 export default class DailyView extends React.Component {
   constructor(props) {
     super(props);
     navProp = props;
-    console.log("navProps " + navProp.navigation);
+    //console.log("navProps " + navProp.navigation);
 
     dataItems = this.props.route.params.loggedData;
-    console.log(dataItems);
+    //console.log(dataItems);
     this.state = {
       activeIndex: 0,
       carouselItems: carousel,
@@ -104,11 +128,7 @@ export default class DailyView extends React.Component {
   render() {
     console.log("DAILY VIEW re-RENDER");
     return (
-      <ContextProvider
-        hour_size={
-          hourSize
-        } /**set hour_size prop so drawngrid>Hrline can take that data */
-      >
+      <ContextProvider hour_size={hourSize}>
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light_gray }}>
           <Header
             status_bar={PropTypes.bool}
@@ -152,16 +172,10 @@ export default class DailyView extends React.Component {
                           <View style={styles.container}>
                             <SmartScroll hour_size={hourSize}>
                               <View style={styles.body}>
-                                <View
-                                  style={styles.hour_col} /*the hours PM & AM */
-                                >
+                                <View style={styles.hour_col}>
                                   <TimeCol hour_size={hourSize} />
                                 </View>
-                                <View
-                                  style={
-                                    styles.schedule_col
-                                  } /**the horizontal lines */
-                                >
+                                <View style={styles.schedule_col}>
                                   <DrawnGrid></DrawnGrid>
                                   <NowBar hour_size={hourSize} />
                                   {!!datesInMap && (
@@ -179,8 +193,8 @@ export default class DailyView extends React.Component {
                       );
                     }}
                     onBeforeSnapToItem={(index) => {
-                      console.log("BEFORE SNAPPING ");
-                      console.log("navprop " + navProp);
+                      //console.log("BEFORE SNAPPING ");
+                      //console.log("navprop " + navProp);
                       if (index > this.state.activeIndex) {
                         if (
                           this.state.activeIndex == 0 &&
@@ -199,7 +213,7 @@ export default class DailyView extends React.Component {
                         else prependToList(index); //swiping left
                       }
                       context.setDate(carousel[index]);
-                      console.log("SETTING STATE BEFORE SNAP ");
+                      //console.log("SETTING STATE BEFORE SNAP ");
                       this.setState({ activeIndex: index });
                     }}
                   />
