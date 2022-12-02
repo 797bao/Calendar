@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
 
 import MonthlyView from "./components/MonthlyView";
 import DailyView from "./components/DailyView";
@@ -23,6 +23,7 @@ import AllJournals from "./components/AllJournals";
 import CreateNote from "./components/CreateNote";
 import Note from "./components/Note";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { SafeAreaView } from "react-native-safe-area-context";
 const Drawer = createDrawerNavigator();
 
 let hourSize = Dimensions.get("window").height / 13.34;
@@ -229,7 +230,6 @@ export default function App() {
         <Tab.Screen
           name="Metrics"
           component={function Metric() {
-            console.log("METRIC SCREEN Re-render");
             return (
               <Stack.Navigator
                 initialRouteName="Metric"
