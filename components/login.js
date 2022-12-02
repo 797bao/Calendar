@@ -10,22 +10,24 @@ import {
   KeyboardAvoidingView,
   Button,
 } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 //import { Button } from "react-native-elements";
 import { handlePostAjaxResponse } from "./utils/utils";
+
 
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
-    console.log("PROPS " + props);
   }
 
   state = {
     username: "",
     password: "",
     token: "",
-  };
+  }; 
 
   render() {
+    
     return (
       <KeyboardAvoidingView style={styles.containerView} behavior="padding">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -65,28 +67,9 @@ export default class LoginScreen extends Component {
   }
 
   onLoginPress() {
-    //this.props.navigation.navigate("App");
-
-    const api = "http://rubyss.com/login/api.php";
-    const { username, password } = this.state;
-    const data = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        req: "login",
-        p1: username,
-        p2: password,
-      }),
-    };
-    fetch(api, data)
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-        handlePostAjaxResponse(res);
-      })
-      .catch((err) => console.log(err));
+    const navigation = useNavigation(); 
+    navigation.navigate('Details')
+    console.log("login")
   }
 
   componentDidMount() {}
