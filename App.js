@@ -12,6 +12,7 @@ import { Dimensions, LogBox } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateActivityView from "./components/CreateActivityView";
 import MetricsView from "./components/MetricsView";
+import LoginScreen from "./components/login";
 
 import * as eva from "@eva-design/eva";
 import {
@@ -87,6 +88,18 @@ function JournalScreen({ navigation }) {
     <ApplicationProvider {...eva} theme={eva.light}>
       <TabNavigator />
     </ApplicationProvider>
+  );
+}
+
+function loginScreen({ navigation }) {
+  return (
+    <LoginScreen
+      logoImageSource={require("./icons/snack-icon.png")}
+      onLoginPress={() => {}}
+      onSignupPress={() => {}}
+      onEmailChange={() => {}}
+      onPasswordChange={() => {}}
+    />
   );
 }
 
@@ -174,9 +187,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="Calendar"
+        initialRouteName="Login"
         screenOptions={{ headerShown: false }}
       >
+        <Tab.Screen name="Login" component={loginScreen} />
         <Tab.Screen name="Journal" component={JournalScreen} />
         <Tab.Screen
           name="Calendar"
@@ -252,3 +266,22 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+/** 
+import * as React from "react";
+import LoginScreen from "./components/login";
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <LoginScreen
+        logoImageSource={require("./icons/snack-icon.png")}
+        onLoginPress={() => {}}
+        onSignupPress={() => {}}
+        onEmailChange={() => {}}
+        onPasswordChange={() => {}}
+      />
+    );
+  }
+}
+*/
