@@ -19,6 +19,7 @@ import MonthlyView from "./components/MonthlyView";
 import DailyView from "./components/DailyView";
 import AddEventView from "./components/AddEventView";
 import DeleteEventView from "./components/DeleteEventView";
+import Login from "./components/Login";
 import procData from "./services/procData";
 import { Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -109,6 +110,12 @@ function JournalScreen({ navigation }) {
       <TabNavigator />
     </ApplicationProvider>
   );
+}
+
+function LoginScreen({ navigation }){
+  return (
+    <Login></Login>
+  )
 }
 
 const data = [
