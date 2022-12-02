@@ -91,21 +91,6 @@ function JournalScreen({ navigation }) {
   );
 }
 
-function loginScreen({ navigation }) {
-  return (
-    <LoginScreen
-      logoImageSource={require("./icons/snack-icon.png")}
-      onLoginPress={() => {
-        console.log("navigation " + navigation);
-        navigation.navigate("App");
-      }}
-      onSignupPress={() => {}}
-      onEmailChange={() => {}}
-      onPasswordChange={() => {}}
-    />
-  );
-}
-
 export default function App() {
   LogBox.ignoreAllLogs(true); //disable warnings of node_modules using deprecated dependencies
   const [log, setLog] = useState(loggedItems);
@@ -278,7 +263,7 @@ export default function App() {
       >
         <Stack.Screen
           name="Login"
-          component={loginScreen}
+          component={LoginScreen}
           screenOptions={{ headerShown: false }}
         />
         <Stack.Screen

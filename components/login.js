@@ -13,10 +13,13 @@ import {
 //import { Button } from "react-native-elements";
 import { handlePostAjaxResponse } from "./utils/utils";
 
+let nav;
+
 export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
-    console.log("PROPS " + props);
+    console.log("PROPS " + JSON.stringify(props));
+    nav = props.navigation;
   }
 
   state = {
@@ -65,7 +68,7 @@ export default class LoginScreen extends Component {
   }
 
   onLoginPress() {
-    //this.props.navigation.navigate("App");
+    nav.navigate("App");
 
     const api = "http://rubyss.com/login/api.php";
     const { username, password } = this.state;
