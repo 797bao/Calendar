@@ -25,37 +25,40 @@ import Colors from "../constants/colors";
 import Svg from "react-native-svg";
 import { Dimensions } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import Carousel from "react-native-snap-carousel";
+import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
 
 let width = Dimensions.get("window").width;
 let barHeight = Dimensions.get("window").height / 23; //23 bars for the whole window
 let activityTotals = new Map();
 let initialData = [];
 import React, { useState } from "react";
-let carouselLength = 5;
+let carouselLength = 3;
 let carousel = [];
-
 let metricDate = new Date();
-/** 
+let dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 for (let i = 0; i < carouselLength; i++) {
   if (i >= carouselLength / 2) {
-    let month = (dayView.getMonth() + i - carouselLength) % 12;
-    carousel[i] = new Date(
-      dayView.getFullYear(),
-      dayView.getMonth(),
-      dayView.getDate() + i - carouselLength
-    );
+    let month = metricDate.getMonth() + i - carouselLength;
+    if (month > 11) month -= 12;
+    else if (month < 0) month += 12;
+
+    carousel[i] = new Date(metricDate.getFullYear(), month, 1);
+    //console.log(">=");
   } else {
-    carousel[i] = new Date(
-      dayView.getFullYear(),
-      dayView.getMonth(),
-      dayView.getDate() + i
-    );
+    let month = metricDate.getMonth() + i;
+    if (month > 11) month -= 12;
+    else if (month < 0) month += 12;
+
+    carousel[i] = new Date(metricDate.getFullYear(), month, 1);
   }
+
+  //console.log("carousel " + carousel[i]);
 }
-*/
 
 function displayMonthBars(month, year, property) {
-  let days = getDaysInMonth(month, year);
+  let days = getDaysInMonth(year, month);
   ////console.log("--------------------DAyS--------");
   let output = [];
   activityTotals = new Map();
@@ -64,14 +67,13 @@ function displayMonthBars(month, year, property) {
   for (let i = 0; i < days; i++) {
     let d = new Date(year, month, i + 1);
     let key = d.toString();
-    let dayNameShort = "" + getDayName(d.getDay());
+
     ////console.log("DAYA SDAGDASFD  - - " + dayNameShort);
-    dayNameShort = dayNameShort.substring(0, 3);
     let xName = "";
     if (d.getDate() >= 10) {
-      xName = dayNameShort + " " + d.getDate();
+      xName = dayNames[d.getDay()] + " " + d.getDate();
     } else {
-      xName = dayNameShort + "  " + d.getDate();
+      xName = dayNames[d.getDay()] + "  " + d.getDate();
     }
     initialData.push({ x: xName, y: 0 });
 
@@ -131,9 +133,7 @@ function displayMonthBars(month, year, property) {
   return output;
 }
 
-function renderStack(props) {
-  const arr = displayMonthBars(10, 2022, props);
-
+function renderStack(props, arr) {
   arr.unshift(initialData);
 
   return arr.map((obj, index) => {
@@ -173,133 +173,237 @@ function renderStack(props) {
   });
 }
 
-function getDayName(dayNo) {
-  const date = new Date();
-  date.setDate(dayNo - 1);
-  return date.toLocaleString("en-US", { weekday: "short" });
-}
-
 function getDaysInMonth(year, month) {
-  return new Date(year, month, 0).getDate();
+  //console.log("year " + year + " month " + month);
+  //console.log("DAYS IN MONTH " + new Date(year, month + 1, 0));
+  return new Date(year, month + 1, 0).getDate();
 }
 
-const MetricsView = (props) => {
-  const [log, setLog] = useState(props.route.params.loggedData);
-  displayMonthBars(10, 2022, log); //nov 2022
-  let pieData = [];
+let monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
-  let graphicColor = [];
-  let total = 0;
+//all the scheduled items (bars) resides in a map, key = day, value = array of all values in that day
+//procData adds a new field -> height to offset bars determined by start/end time
 
-  for (let [key, value] of activityTotals) {
-    pieData.push({ x: "" + value, y: value, fill: key });
-    graphicColor.push(key);
-    total += value;
+//shifts content of the carousel 1 day forward by changing the earliest day to the latest day + 1
+function appendToList(index) {
+  let arrHalfLen = Math.floor(carousel.length / 2);
+  //make a new date that is a deep copy of the current day value we are on
+  let curDay = new Date(
+    carousel[index].getFullYear(),
+    carousel[index].getMonth(),
+    carousel[index].getDate()
+  );
+
+  let appendIndex = (index + arrHalfLen) % carousel.length; //the index of data we want to modify
+  carousel[appendIndex] = curDay;
+  carousel[appendIndex].setMonth(curDay.getMonth() + arrHalfLen); //add by X months based on carousel's length reac
+}
+
+//shifts content of the carousel 1 day backwards by changing the latest day to the earliest day - 1
+function prependToList(index) {
+  let arrHalfLen = Math.floor(carousel.length / 2);
+  //make a new date that is a deep copy of the current day value we are on
+  let curDay = new Date(
+    carousel[index].getFullYear(),
+    carousel[index].getMonth(),
+    carousel[index].getDate()
+  );
+
+  let prependIndex = mod(index - arrHalfLen, carousel.length); //the index of data we want to modify
+  carousel[prependIndex] = curDay;
+  carousel[prependIndex].setMonth(curDay.getMonth() - arrHalfLen); //subtract by X days based on carousel's length
+}
+
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
+let loggedData;
+export default class MetricsView extends React.Component {
+  constructor(props) {
+    super(props);
+    loggedData = this.props.route.params.loggedData;
+    //console.log("navProps " + navProp.navigation);
+    //console.log(dataItems);
+    this.state = {
+      activeIndex: 0,
+      carouselItems: carousel,
+    };
   }
-  total = Math.round(total * 10) / 10;
 
-  return (
-    <SafeAreaView>
-      <Header
-        status_bar={PropTypes.bool}
-        accent={Colors.blue}
-        left_icon={PropTypes.node}
-        header_color={Colors.light_gray}
-      />
-      <Svg
-        width={width}
-        height={220}
-        viewBox="0 0 400 400"
-        style={{ width: "100%", height: "auto" }}
-      >
-        <VictoryPie
-          data={pieData}
-          labels={({ datum }) => {
-            if (datum.y != 0) return datum.y;
-            else return "";
-          }}
-          padding={50}
+  _renderItem({ item, index }) {
+    let month = item.getMonth();
+    let year = item.getFullYear();
+    let arr = displayMonthBars(month, year, loggedData); //nov 2022
+    let pieData = [];
+
+    let graphicColor = [];
+    let total = 0;
+
+    for (let [key, value] of activityTotals) {
+      pieData.push({ x: "" + value, y: value, fill: key });
+      graphicColor.push(key);
+      total += value;
+    }
+    total = Math.round(total * 10) / 10;
+    return (
+      <View>
+        <Svg
           width={width}
           height={220}
-          colorScale={graphicColor}
-          innerRadius={45}
+          viewBox="0 0 400 400"
+          style={{ width: "100%", height: "auto" }}
+        >
+          <VictoryPie
+            data={pieData}
+            labels={({ datum }) => {
+              if (datum.y != 0) return datum.y;
+              else return "";
+            }}
+            padding={50}
+            width={width}
+            height={220}
+            colorScale={graphicColor}
+            innerRadius={45}
+            style={{
+              padding: -20,
+              margin: -20,
+              labels: {
+                fill: (d) => d.datum.fill,
+                fontSize: 23,
+                fontFamily: "Courier",
+              },
+            }}
+          />
+          <VictoryLabel
+            textAnchor="middle"
+            style={{ fontSize: 40 }}
+            x={200}
+            y={200}
+            text={total + "\nHours"}
+          />
+        </Svg>
+
+        <Text
           style={{
-            padding: -20,
-            margin: -20,
-            labels: {
-              fill: (d) => d.datum.fill,
-              fontSize: 23,
-              fontFamily: "Courier",
-            },
+            alignSelf: "center",
+            fontSize: 15.5,
+            color: "gray",
+            fontWeight: "bold",
+          }}
+        >
+          {"Hours"}
+        </Text>
+        <ScrollView
+          contentContainerStyle={{
+            paddingBottom: 250, //needs to be variable
+          }}
+        >
+          <VictoryChart
+            stroke
+            height={barHeight * 31}
+            padding={{ left: 90, right: 40, top: 30 }}
+            domainPadding={{ x: 25 }}
+          >
+            <VictoryAxis
+              color="gray"
+              orientation="top"
+              stroke={5}
+              dependentAxis={true}
+              tickValues={[2, 4, 6, 8]}
+              style={{
+                grid: { stroke: "grey", strokeWidth: 0.4 },
+                axis: { stroke: "white", strokeWidth: 0.01 },
+
+                tickLabels: {
+                  fontSize: 15.5,
+                  padding: 5,
+                  fill: "gray",
+                },
+              }}
+            />
+            <VictoryAxis
+              invertAxis={true}
+              dependentAxis={false}
+              style={{
+                axis: { stroke: "#756f6a" },
+                tickLabels: {
+                  fontSize: 16.5,
+                  padding: 12,
+                  //fontWeight: "bold",
+                  fontFamily: "Courier",
+                  fill: "#171717",
+                },
+              }}
+            />
+            <VictoryAxis tickFormat={(x) => ``} />
+            <VictoryStack sortOrder="ascending" horizontal>
+              {renderStack(loggedData, arr)}
+            </VictoryStack>
+          </VictoryChart>
+        </ScrollView>
+      </View>
+    );
+  }
+
+  getDateHeader() {
+    let month = this.state.carouselItems[this.state.activeIndex].getMonth();
+    let year = this.state.carouselItems[this.state.activeIndex].getFullYear();
+    console.log("ACTIVE INDEX " + this.state.activeIndex);
+    return monthNames[month] + " " + year;
+  }
+
+  render() {
+    return (
+      <SafeAreaView>
+        <Text style={{ alignSelf: "center", fontSize: 25 }}>
+          {this.getDateHeader()}
+        </Text>
+        <Carousel
+          layout={"default"}
+          layoutCardOffset={1}
+          ref={(ref) => (this.carousel = ref)}
+          loop
+          centerContent
+          data={this.state.carouselItems}
+          enableSnap
+          loopClonesPerSide={1} //allows swiping 4x without stopping
+          sliderWidth={Dimensions.get("screen").width}
+          itemWidth={Dimensions.get("screen").width}
+          renderItem={this._renderItem}
+          onBeforeSnapToItem={(index) => {
+            //console.log("BEFORE SNAPPING ");
+            //console.log("navprop " + navProp);
+            if (index > this.state.activeIndex) {
+              if (this.state.activeIndex == 0 && index == carousel.length - 1)
+                prependToList(index);
+              //swiping left, was at last index to first index
+              else appendToList(index); //swiping right
+            } else if (index < this.state.activeIndex) {
+              if (this.state.activeIndex == carousel.length - 1 && index == 0)
+                appendToList(index);
+              //swiping right was at last index now back to first
+              else prependToList(index); //swiping left
+            }
+
+            //console.log("SETTING STATE BEFORE SNAP ");
+            this.setState({ activeIndex: index });
           }}
         />
-        <VictoryLabel
-          textAnchor="middle"
-          style={{ fontSize: 40 }}
-          x={200}
-          y={200}
-          text={total + "\nHours"}
-        />
-      </Svg>
-
-      <Text
-        style={{
-          alignSelf: "center",
-          fontSize: 15.5,
-          color: "gray",
-          fontWeight: "bold",
-        }}
-      >
-        {"Hours"}
-      </Text>
-      <ScrollView
-        contentContainerStyle={{
-          paddingBottom: 250, //needs to be variable
-        }}
-      >
-        <VictoryChart
-          stroke
-          height={barHeight * 31}
-          padding={{ left: 90, right: 40, top: 30 }}
-          domainPadding={{ x: 25 }}
-        >
-          <VictoryAxis
-            color="gray"
-            orientation="top"
-            stroke={5}
-            dependentAxis={true}
-            style={{
-              grid: { stroke: "grey", strokeWidth: 0.4 },
-              axis: { stroke: "white", strokeWidth: 0.01 },
-              tickLabels: {
-                fontSize: 15.5,
-                padding: 5,
-                fill: "gray",
-              },
-            }}
-          />
-          <VictoryAxis
-            invertAxis={true}
-            dependentAxis={false}
-            style={{
-              axis: { stroke: "#756f6a" },
-              tickLabels: {
-                fontSize: 16.5,
-                padding: 12,
-                //fontWeight: "bold",
-                fontFamily: "Courier",
-                fill: "#171717",
-              },
-            }}
-          />
-          <VictoryAxis tickFormat={(x) => ``} />
-          <VictoryStack sortOrder="ascending" horizontal>
-            {renderStack(log)}
-          </VictoryStack>
-        </VictoryChart>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
-export default MetricsView;
+      </SafeAreaView>
+    );
+  }
+}
