@@ -95,7 +95,10 @@ function loginScreen({ navigation }) {
   return (
     <LoginScreen
       logoImageSource={require("./icons/snack-icon.png")}
-      onLoginPress={() => {}}
+      onLoginPress={() => {
+        console.log("navigation " + navigation);
+        navigation.navigate("App");
+      }}
       onSignupPress={() => {}}
       onEmailChange={() => {}}
       onPasswordChange={() => {}}
@@ -184,13 +187,12 @@ export default function App() {
     );
   }
 
-  return (
-    <NavigationContainer>
+  function appScreen() {
+    return (
       <Tab.Navigator
         initialRouteName="Login"
         screenOptions={{ headerShown: false }}
       >
-        <Tab.Screen name="Login" component={loginScreen} />
         <Tab.Screen name="Journal" component={JournalScreen} />
         <Tab.Screen
           name="Calendar"
@@ -263,6 +265,29 @@ export default function App() {
           }}
         />
       </Tab.Navigator>
+    );
+  }
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen
+          name="Login"
+          component={loginScreen}
+          screenOptions={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="App"
+          component={appScreen}
+          screenOptions={{ headerShown: false }}
+        ></Stack.Screen>
+        {(props) => <loginScreen {...props} />}
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

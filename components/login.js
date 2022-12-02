@@ -14,6 +14,11 @@ import {
 import { handlePostAjaxResponse } from "./utils/utils";
 
 export default class LoginScreen extends Component {
+  constructor(props) {
+    super(props);
+    console.log("PROPS " + props);
+  }
+
   state = {
     username: "",
     password: "",
@@ -59,24 +64,8 @@ export default class LoginScreen extends Component {
     );
   }
 
-  componentDidMount() {}
-
-  componentWillUnmount() {}
-
-  handleUsernameInput = (text) => {
-    this.setState({
-      username: text,
-    });
-  };
-
-  handlePasswordInput = (text) => {
-    this.setState({
-      password: text,
-    });
-  };
-
   onLoginPress() {
-    console.log("loggin in");
+    //this.props.navigation.navigate("App");
 
     const api = "http://rubyss.com/login/api.php";
     const { username, password } = this.state;
@@ -99,6 +88,22 @@ export default class LoginScreen extends Component {
       })
       .catch((err) => console.log(err));
   }
+
+  componentDidMount() {}
+
+  componentWillUnmount() {}
+
+  handleUsernameInput = (text) => {
+    this.setState({
+      username: text,
+    });
+  };
+
+  handlePasswordInput = (text) => {
+    this.setState({
+      password: text,
+    });
+  };
 
   showState() {
     const { username, password } = this.state;
