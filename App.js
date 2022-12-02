@@ -1,7 +1,7 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
+import { NavigationContainer, useIsFocused } from "@react-navigation/native";
 
 import MonthlyView from "./components/MonthlyView";
 import DailyView from "./components/DailyView";
@@ -12,6 +12,8 @@ import { Dimensions, LogBox } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateActivityView from "./components/CreateActivityView";
 import MetricsView from "./components/MetricsView";
+import TestFile from "./components/TestFile";
+import TestFile2 from "./components/TestFile2";
 
 import * as eva from "@eva-design/eva";
 import {
@@ -23,7 +25,8 @@ import AllJournals from "./components/AllJournals";
 import CreateNote from "./components/CreateNote";
 import Note from "./components/Note";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, SafeAreaView, Button } from "react-native";
+
 const Drawer = createDrawerNavigator();
 
 let hourSize = Dimensions.get("window").height / 13.34;
@@ -95,6 +98,8 @@ export default function App() {
   LogBox.ignoreAllLogs(true); //disable warnings of node_modules using deprecated dependencies
   const [log, setLog] = useState(loggedItems);
   const [activities, setActivities] = useState(allActivities);
+  const [count, setCount] = useState(0);
+  const [count1, setCount1] = useState(0);
 
   //user created a new activity
   const pushActivity = (activityName, activityColor) => {
@@ -167,10 +172,47 @@ export default function App() {
             updateData: pushActivity,
           }}
         />
-        {(props) => <AddEventView {...props} loggedItems={loggedItems} />}
       </Drawer.Navigator>
     );
   }
+
+  /** 
+  function testscreen() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name="count1">
+          {(props) => (
+            <TestFile2
+              {...props}
+              updateData={setCount}
+              otherProp={count}
+              otherProp2={count1}
+            />
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    );
+  }
+
+  function countscreen() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name="count2">
+          {(props) => <TestFile {...props} otherProp={count} />}
+        </Stack.Screen>
+      </Stack.Navigator>
+    );
+  }
+
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={testscreen} />
+        <Tab.Screen name="count" component={countscreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+  */
 
   return (
     <NavigationContainer>
@@ -201,28 +243,31 @@ export default function App() {
                     updateData: pushActivity,
                   }}
                 />
-                <Stack.Screen
-                  name="AddEventView"
-                  component={AddEventView}
-                  initialParams={{
-                    activity: activities,
-                    loggedData: log,
-                    updateData: setLoggedItems,
-                  }}
-                />
-                <Stack.Screen
-                  name="DeleteEventView"
-                  component={DeleteEventView}
-                  initialParams={{
-                    activity: activities,
-                    loggedData: log,
-                    updateData: setLoggedItems,
-                    removeData: deleteLoggedItem,
-                  }}
-                />
-                {(props) => (
-                  <AddEventView {...props} loggedItems={loggedItems} />
-                )}
+                <Stack.Screen name="AddEventView">
+                  {(props) => (
+                    <AddEventView
+                      {...props}
+                      counter={count}
+                      loggedData={log}
+                      updateData={setLoggedItems}
+                      activity={activities}
+                      updateCounter={setCount}
+                    />
+                  )}
+                </Stack.Screen>
+                <Stack.Screen name="DeleteEventView">
+                  {(props) => (
+                    <DeleteEventView
+                      {...props}
+                      activity={activities}
+                      loggedData={log}
+                      updateData={setLoggedItems}
+                      removeData={deleteLoggedItem}
+                      counter={count}
+                      updateCounter={setCount}
+                    />
+                  )}
+                </Stack.Screen>
               </Stack.Navigator>
             );
           }}
@@ -230,6 +275,8 @@ export default function App() {
         <Tab.Screen
           name="Metrics"
           component={function Metric() {
+            console.log("METRIC SCREEN parent Re-render");
+
             return (
               <Stack.Navigator
                 initialRouteName="Metric"
@@ -237,13 +284,11 @@ export default function App() {
                   headerShown: false,
                 }}
               >
-                <Stack.Screen
-                  name="Metric"
-                  component={MetricsView}
-                  initialParams={{
-                    loggedData: log,
-                  }}
-                />
+                <Stack.Screen name="Metric">
+                  {(props) => (
+                    <MetricsView {...props} loggedData={log} counter={count} />
+                  )}
+                </Stack.Screen>
               </Stack.Navigator>
             );
           }}

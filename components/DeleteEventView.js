@@ -93,7 +93,7 @@ const AddEventView = (props) => {
 
   function getActivities() {
     let arr = [];
-    for (let [key, value] of props.route.params.activity) {
+    for (let [key, value] of props.activity) {
       arr.push({ label: "" + key, value: +"" + value });
     }
     return arr;
@@ -123,19 +123,21 @@ const AddEventView = (props) => {
       activityName: activityNameValue,
     };
 
-    props.route.params.removeData(oldData);
+    props.removeData(oldData);
 
-    props.route.params.updateData(dateKey, newData);
+    props.updateData(dateKey, newData);
+    props.updateCounter(props.counter + 1);
     props.navigation.navigate("Day", {
-      data: props.route.params.loggedData,
+      data: props.loggedData,
     });
   };
 
   const removeEventListener = () => {
-    props.route.params.removeData(oldData);
+    props.removeData(oldData);
+    props.updateCounter(props.counter + 1);
     //props.route.params.removeData(dateKey);
     props.navigation.navigate("Day", {
-      data: props.route.params.loggedData,
+      data: props.loggedData,
     });
   };
 

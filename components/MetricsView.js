@@ -232,10 +232,11 @@ function mod(n, m) {
 }
 
 let loggedData;
+
 export default class MetricsView extends React.Component {
   constructor(props) {
     super(props);
-    loggedData = this.props.route.params.loggedData;
+    loggedData = this.props.loggedData;
     //console.log("navProps " + navProp.navigation);
     //console.log(dataItems);
     this.state = {
@@ -367,11 +368,14 @@ export default class MetricsView extends React.Component {
   }
 
   render() {
+    console.log("THIS props " + JSON.stringify(this.props));
+
     return (
       <SafeAreaView>
         <Text style={{ alignSelf: "center", fontSize: 25 }}>
           {this.getDateHeader()}
         </Text>
+
         <Carousel
           layout={"default"}
           layoutCardOffset={1}

@@ -24,7 +24,11 @@ let choseStart = true;
 let badgeColor = "#485D99";
 
 const AddEventView = (props) => {
+  console.log("ADD EVENT VIEW");
+  console.log(" PROPS " + JSON.stringify(props));
   let pageDay = props.route.params.day;
+  console.log(" a4444 ");
+
   let currentHour = new Date().getHours();
   let currentMinutes = new Date().getMinutes();
   let newStartDate = new Date(
@@ -77,7 +81,7 @@ const AddEventView = (props) => {
 
   function getActivities() {
     let arr = [];
-    for (let [key, value] of props.route.params.activity) {
+    for (let [key, value] of props.activity) {
       arr.push({ label: "" + key, value: +"" + value });
     }
     return arr;
@@ -99,16 +103,19 @@ const AddEventView = (props) => {
       activityName: activityNameValue,
     };
 
-    props.route.params.updateData(dateKey, newData);
+    props.updateData(dateKey, newData);
+    console.log("ADDIDNGGG " + props.counter);
+    props.updateCounter(props.counter + 1);
+
     props.navigation.navigate("Day", {
-      data: props.route.params.loggedData,
+      data: props.loggedData,
     });
   };
 
   const removeEventListener = () => {
-    //props.route.params.removeData(dateKey);
+    //props.removeData(dateKey);
     props.navigation.navigate("Day", {
-      data: props.route.params.loggedData,
+      data: props.loggedData,
     });
   };
 

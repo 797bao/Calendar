@@ -60,6 +60,7 @@ const CreateActivityView = (props) => {
     props.navigation.navigate("Day");
   };
 
+  console.log("CREATE ACTIVITY VIEW re-render");
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ flexDirection: "row" }}>
