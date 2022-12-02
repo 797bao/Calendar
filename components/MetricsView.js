@@ -32,9 +32,27 @@ let activityTotals = new Map();
 let initialData = [];
 import React, { useState } from "react";
 
+let metricDate = new Date();
+for (let i = 0; i < carouselLength; i++) {
+  if (i >= carouselLength / 2) {
+    let month = (dayView.getMonth() + i - carouselLength) % 12;
+    carousel[i] = new Date(
+      dayView.getFullYear(),
+      dayView.getMonth(),
+      dayView.getDate() + i - carouselLength
+    );
+  } else {
+    carousel[i] = new Date(
+      dayView.getFullYear(),
+      dayView.getMonth(),
+      dayView.getDate() + i
+    );
+  }
+}
+
 function displayMonthBars(month, year, property) {
   let days = getDaysInMonth(month, year);
-  //console.log("--------------------DAyS--------");
+  ////console.log("--------------------DAyS--------");
   let output = [];
   activityTotals = new Map();
   initialData = [];
@@ -43,7 +61,7 @@ function displayMonthBars(month, year, property) {
     let d = new Date(year, month, i + 1);
     let key = d.toString();
     let dayNameShort = "" + getDayName(d.getDay());
-    //console.log("DAYA SDAGDASFD  - - " + dayNameShort);
+    ////console.log("DAYA SDAGDASFD  - - " + dayNameShort);
     dayNameShort = dayNameShort.substring(0, 3);
     let xName = "";
     if (d.getDate() >= 10) {
@@ -58,26 +76,26 @@ function displayMonthBars(month, year, property) {
 
       let map = new Map();
       for (let x = 0; x < arr.length; x++) {
-        //console.log("ELE  " + JSON.stringify(arr[x]));
+        ////console.log("ELE  " + JSON.stringify(arr[x]));
         let currentActivity = arr[x].color;
         let endTime = arr[x].end.getHours() * 60 + arr[x].end.getMinutes();
         let startTime =
           arr[x].start.getHours() * 60 + arr[x].start.getMinutes();
         let totalHrs = (endTime - startTime) / 60;
-        //console.log("TOTAL HRS " + totalHrs);
+        ////console.log("TOTAL HRS " + totalHrs);
 
         if (map.has(currentActivity)) {
           map.set(currentActivity, map.get(currentActivity) + totalHrs);
-          //console.log("GET " + map.get(currentActivity));
-          //console.log("MAP " + JSON.stringify(map));
+          ////console.log("GET " + map.get(currentActivity));
+          ////console.log("MAP " + JSON.stringify(map));
         }
         //there exists a similar logged activity
 
         //initial
         else {
           map.set(currentActivity, totalHrs);
-          //console.log("GET " + map.get(currentActivity));
-          //console.log("MAP " + JSON.stringify(map));
+          ////console.log("GET " + map.get(currentActivity));
+          ////console.log("MAP " + JSON.stringify(map));
         }
 
         if (activityTotals.has(currentActivity))
@@ -87,7 +105,7 @@ function displayMonthBars(month, year, property) {
           );
         else activityTotals.set(currentActivity, totalHrs);
       }
-      /// console.log("test");
+      /// //console.log("test");
       //
       let counter = 0;
       for (let [key, value] of map) {
@@ -116,7 +134,7 @@ function renderStack(props) {
 
   return arr.map((obj, index) => {
     const key = index;
-    //console.log("HOW MANY TIMES");
+    ////console.log("HOW MANY TIMES");
 
     return (
       <VictoryBar
