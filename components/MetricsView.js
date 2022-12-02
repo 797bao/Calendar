@@ -31,8 +31,11 @@ let barHeight = Dimensions.get("window").height / 23; //23 bars for the whole wi
 let activityTotals = new Map();
 let initialData = [];
 import React, { useState } from "react";
+let carouselLength = 5;
+let carousel = [];
 
 let metricDate = new Date();
+/** 
 for (let i = 0; i < carouselLength; i++) {
   if (i >= carouselLength / 2) {
     let month = (dayView.getMonth() + i - carouselLength) % 12;
@@ -49,6 +52,7 @@ for (let i = 0; i < carouselLength; i++) {
     );
   }
 }
+*/
 
 function displayMonthBars(month, year, property) {
   let days = getDaysInMonth(month, year);
