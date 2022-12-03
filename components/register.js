@@ -37,12 +37,19 @@ export default class RegisterScreen extends Component {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.loginScreenContainer}>
             <View style={styles.loginFormView}>
-              <Text style={styles.logoText}>Login</Text>
+              <Text style={styles.logoText}>Register</Text>
               <TextInput
                 onChangeText={this.handleUsernameInput}
                 placeholder="Username"
                 placeholderColor="#c4c3cb"
                 style={styles.loginFormTextInput}
+              />
+              <TextInput
+                onChangeText={this.handlePasswordInput}
+                placeholder="Email"
+                placeholderColor="#c4c3cb"
+                style={styles.loginFormTextInput}
+                secureTextEntry={true}
               />
               <TextInput
                 onChangeText={this.handlePasswordInput}

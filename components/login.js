@@ -71,7 +71,7 @@ export default class LoginScreen extends Component {
   }
 
   onRegisterPress(){
-    console.log("here")
+    nav.navigate("RegisterScreen")
 
   }
 
