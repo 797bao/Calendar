@@ -41,3 +41,6 @@ The project was made using Node.js, Javascript, Expo, and other following framew
     "victory": "^36.6.8",
     "victory-native": "^36.6.8"
     
+1. Download Node https://nodejs.org/en/download/
+2. Download the project as a zip file & unzip it
+3. In your IDE of choice, open the folder
