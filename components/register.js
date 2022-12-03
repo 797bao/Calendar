@@ -61,7 +61,7 @@ export default class RegisterScreen extends Component {
               <View style={styles.buttonsRow}>
                 <Button
                   buttonStyle={styles.loginButton}
-                  onPress={() => this.onRegisterPress()}
+                  onPress={() => this.onLoginPress()}
                   title="Register"
                 />
               </View>
