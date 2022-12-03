@@ -13,6 +13,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateActivityView from "./components/CreateActivityView";
 import MetricsView from "./components/MetricsView";
 import LoginScreen from "./components/login";
+import RegisterScreen from "./components/register";
 
 import * as eva from "@eva-design/eva";
 import {
@@ -37,32 +38,6 @@ const allActivities = new Map();
 
 //default activity is called Event
 allActivities.set("Event", "#485D99");
-allActivities.set("School", "#9e3c31");
-allActivities.set("Gym", "#487B1F");
-allActivities.set("Cardio", "#E5AF36");
-
-loggedItems.set(
-  new Date(2022, 10, 27).toString(),
-  procData(
-    [
-      {
-        title: "BBQ with Friends",
-        start: new Date(2022, 10, 27, 2, 21),
-        end: new Date(2022, 10, 27, 4, 0),
-        color: allActivities.get("Event"),
-        activityName: "Event",
-      },
-      {
-        title: "SE classes",
-        start: new Date(2022, 10, 27, 8, 21),
-        end: new Date(2022, 10, 27, 12, 20),
-        color: allActivities.get("School"),
-        activityName: "School",
-      },
-    ],
-    hourSize
-  )
-);
 
 const BottomTabBar = ({ navigation, state }) => (
   <BottomNavigation
@@ -177,81 +152,91 @@ export default function App() {
 
   function appScreen() {
     return (
-      <Tab.Navigator
-        initialRouteName="Login"
-        screenOptions={{ headerShown: false }}
-      >
-        <Tab.Screen name="Journal" component={JournalScreen} />
-        <Tab.Screen
-          name="Calendar"
-          component={function CalendarScreen() {
-            console.log("CALENDAR SCREEN Re-render");
-            return (
-              <Stack.Navigator
-                initialRouteName="Day"
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen name="Drawer" component={Drawers} />
-                <Drawer.Screen name="Month" component={MonthlyView} />
-                <Stack.Screen
-                  name="CreateActivityView"
-                  component={CreateActivityView}
-                  options={{ headerShown: false }}
-                  initialParams={{
-                    activity: activities,
-                    updateData: pushActivity,
+      <NavigationContainer independent={true}>
+        <Tab.Navigator
+          initialRouteName="Calendar"
+          screenOptions={{ headerShown: false }}
+        >
+          <Tab.Screen name="Journal" component={JournalScreen} />
+          <Tab.Screen
+            name="Calendar"
+            component={function CalendarScreen() {
+              console.log("CALENDAR SCREEN Re-render");
+              return (
+                <Stack.Navigator
+                  initialRouteName="Day"
+                  screenOptions={{
+                    headerShown: false,
                   }}
-                />
-                <Stack.Screen name="AddEventView">
-                  {(props) => (
-                    <AddEventView
-                      {...props}
-                      counter={count}
-                      loggedData={log}
-                      updateData={setLoggedItems}
-                      activity={activities}
-                      updateCounter={setCount}
-                    />
-                  )}
-                </Stack.Screen>
-                <Stack.Screen name="DeleteEventView">
-                  {(props) => (
-                    <DeleteEventView
-                      {...props}
-                      activity={activities}
-                      loggedData={log}
-                      updateData={setLoggedItems}
-                      removeData={deleteLoggedItem}
-                      counter={count}
-                      updateCounter={setCount}
-                    />
-                  )}
-                </Stack.Screen>
-              </Stack.Navigator>
-            );
-          }}
-        />
-        <Tab.Screen
-          name="Metrics"
-          component={function Metric() {
-            console.log("METRIC SCREEN parent Re-render");
+                >
+                  <Stack.Screen name="Drawer" component={Drawers} />
+                  <Drawer.Screen name="Month" component={MonthlyView} />
+                  <Stack.Screen
+                    name="CreateActivityView"
+                    component={CreateActivityView}
+                    options={{ headerShown: false }}
+                    initialParams={{
+                      activity: activities,
+                      updateData: pushActivity,
+                    }}
+                  />
+                  <Stack.Screen name="AddEventView">
+                    {(props) => (
+                      <AddEventView
+                        {...props}
+                        counter={count}
+                        loggedData={log}
+                        updateData={setLoggedItems}
+                        activity={activities}
+                        updateCounter={setCount}
+                      />
+                    )}
+                  </Stack.Screen>
+                  <Stack.Screen name="DeleteEventView">
+                    {(props) => (
+                      <DeleteEventView
+                        {...props}
+                        activity={activities}
+                        loggedData={log}
+                        updateData={setLoggedItems}
+                        removeData={deleteLoggedItem}
+                        counter={count}
+                        updateCounter={setCount}
+                      />
+                    )}
+                  </Stack.Screen>
+                </Stack.Navigator>
+              );
+            }}
+          />
+          <Tab.Screen
+            name="Metrics"
+            component={function Metric() {
+              console.log("METRIC SCREEN parent Re-render");
 
-            return (
-              <Stack.Navigator
-                initialRouteName="Metric"
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen name="Metric">
-                  {(props) => (
-                    <MetricsView {...props} loggedData={log} counter={count} />
-                  )}
-                </Stack.Screen>
-              </Stack.Navigator>
-            );
+              return (
+                <Stack.Navigator
+                  initialRouteName="Metric"
+                  screenOptions={{
+                    headerShown: false,
+                  }}
+                >
+                  <Stack.Screen name="Metric">
+                    {(props) => (
+                      <MetricsView
+                        {...props}
+                        loggedData={log}
+                        counter={count}
+                      />
+                    )}
+                  </Stack.Screen>
+                </Stack.Navigator>
+              );
+            }}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
   }
 
   return (
@@ -267,21 +252,9 @@ export default function App() {
           component={LoginScreen}
           screenOptions={{ headerShown: false }}
         />
-      </Tab.Navigator>
-    );
-  }
-
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Login"
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
         <Stack.Screen
-          name="Login"
-          component={LoginScreen}
+          name="RegisterScreen"
+          component={RegisterScreen}
           screenOptions={{ headerShown: false }}
         />
         <Stack.Screen
@@ -289,27 +262,7 @@ export default function App() {
           component={appScreen}
           screenOptions={{ headerShown: false }}
         ></Stack.Screen>
-        {(props) => <loginScreen {...props} />}
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-/** 
-import * as React from "react";
-import LoginScreen from "./components/login";
-
-export default class App extends React.Component {
-  render() {
-    return (
-      <LoginScreen
-        logoImageSource={require("./icons/snack-icon.png")}
-        onLoginPress={() => {}}
-        onSignupPress={() => {}}
-        onEmailChange={() => {}}
-        onPasswordChange={() => {}}
-      />
-    );
-  }
-}
-*/
