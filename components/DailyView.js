@@ -32,6 +32,7 @@ let dayView = new Date();
 
 //supplying the carousel
 for (let i = 0; i < carouselLength; i++) {
+  console.log("CAROUSEL AGAIN? BUT WHY");
   let temp = new Date(
     dayView.getFullYear(),
     dayView.getMonth(),
@@ -119,14 +120,18 @@ export default class DailyView extends React.Component {
 
     dataItems = this.props.route.params.loggedData;
     //console.log(dataItems);
+    console.log(" DAY PROP  " + this.props.route.params.dayIndex);
+
     this.state = {
-      activeIndex: 0,
+      activeIndex:
+        this.props.route.params.dayIndex == undefined
+          ? 0
+          : this.props.route.params.dayIndex,
       carouselItems: carousel,
     };
   }
 
   render() {
-    console.log("DAILY VIEW re-RENDER");
     return (
       <ContextProvider hour_size={hourSize}>
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light_gray }}>
@@ -160,6 +165,7 @@ export default class DailyView extends React.Component {
                     itemWidth={Dimensions.get("screen").width}
                     renderItem={({ item, index }) => {
                       let datesInMap = dataItems.get(item.toString());
+                      console.log("RENDER ITEM IN CAROUSEL  " + item);
                       return (
                         <View
                           style={{
@@ -193,6 +199,9 @@ export default class DailyView extends React.Component {
                       );
                     }}
                     onBeforeSnapToItem={(index) => {
+                      console.log(
+                        "onBeforeSnapToItem " + this.state.activeIndex
+                      );
                       //console.log("BEFORE SNAPPING ");
                       //console.log("navprop " + navProp);
                       if (index > this.state.activeIndex) {
@@ -221,6 +230,7 @@ export default class DailyView extends React.Component {
                     onPress={() =>
                       this.props.navigation.navigate("AddEventView", {
                         day: carousel[this.state.activeIndex],
+                        dayIndex: this.state.activeIndex,
                       })
                     }
                     activeOpacity={0.5}

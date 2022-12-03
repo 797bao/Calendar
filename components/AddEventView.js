@@ -108,7 +108,7 @@ const AddEventView = (props) => {
     props.updateCounter(props.counter + 1);
 
     props.navigation.navigate("Day", {
-      data: props.loggedData,
+      dayIndex: props.route.params.dayIndex,
     });
   };
 

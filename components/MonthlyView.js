@@ -5,14 +5,20 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import Header from "./Header";
+import { AppContext, ContextProvider } from "./ContextProvider";
+import { PropTypes } from "prop-types";
+import Colors from "../constants/colors";
 
 //an array holding array of numbers for each day, each month holds 7 arrays of 6 numbers in each aray
 let days = [];
 let months = [];
 
-appendMonths(2);
+appendMonths(12);
+prependMonths(13);
 
 //adding future months
 function appendMonths(monthAmount) {
@@ -77,8 +83,27 @@ function initializeDaysForMonth(firstDayOfMonth) {
   return daysForMonth;
 }
 
+function getDateHeader() {
+  return monthNames[month] + " " + year;
+}
+
+let monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 //the generated data is displayed in a horizontal flatlist
-export default function MonthlyView() {
+export default function MonthlyView(props) {
   const pressDay = (day) => {
     //console.log("PRESSED " + months[0]); //TODO: for Farzin, implement the routes
   };
@@ -113,8 +138,22 @@ export default function MonthlyView() {
   return (
     <SafeAreaView style={styles.container}>
       <SafeAreaView style={styles.viewMonth}>
-        <Text style={styles.textMonth}>
-          {month.toLocaleString("default", { month: "long" })}
+        <TouchableOpacity
+          onPress={() => {
+            //console.log("DRAWER");
+            props.navigation.openDrawer();
+          }}
+        >
+          <Image
+            style={headerStyles.image}
+            source={require("../icons/Sidebar.png")}
+          />
+        </TouchableOpacity>
+
+        <Text
+          style={{ flexDirection: "row", alignSelf: "center", fontSize: 25 }}
+        >
+          {"December"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.viewDaysOfWeek}>
@@ -162,10 +201,12 @@ const styles = StyleSheet.create({
     flex: 0.05,
   },
   textMonth: {
+    alignSelf: "center",
     paddingLeft: "6.15%",
     fontSize: 23,
   },
   viewDaysOfWeek: {
+    marginTop: 20,
     alignItems: "center",
     flexDirection: "row",
     flex: 0.0365,
@@ -182,8 +223,8 @@ const styles = StyleSheet.create({
   },
   listItem: {
     paddingLeft: 18,
-    width: 53.5,
-    height: 110,
+    width: 54.2,
+    height: 105,
     fontSize: 13,
     backgroundColor: "#FFFBFF",
     margin: 1,
@@ -191,5 +232,14 @@ const styles = StyleSheet.create({
   days: {
     flex: 1,
     backgroundColor: "#E1E2EC",
+  },
+});
+
+const headerStyles = StyleSheet.create({
+  image: {
+    flexDirection: "row",
+    marginLeft: 18,
+    width: 20,
+    height: 20,
   },
 });
