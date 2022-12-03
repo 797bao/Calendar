@@ -12,8 +12,7 @@ import { Dimensions, LogBox } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateActivityView from "./components/CreateActivityView";
 import MetricsView from "./components/MetricsView";
-import TestFile from "./components/TestFile";
-import TestFile2 from "./components/TestFile2";
+import LoginScreen from "./components/login";
 
 import * as eva from "@eva-design/eva";
 import {
@@ -176,10 +175,10 @@ export default function App() {
     );
   }
 
-  return (
-    <NavigationContainer>
+  function appScreen() {
+    return (
       <Tab.Navigator
-        initialRouteName="Calendar"
+        initialRouteName="Login"
         screenOptions={{ headerShown: false }}
       >
         <Tab.Screen name="Journal" component={JournalScreen} />
@@ -253,9 +252,64 @@ export default function App() {
                 </Stack.Screen>
               </Stack.Navigator>
             );
-          }}
+  }
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          screenOptions={{ headerShown: false }}
         />
       </Tab.Navigator>
+    );
+  }
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          screenOptions={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="App"
+          component={appScreen}
+          screenOptions={{ headerShown: false }}
+        ></Stack.Screen>
+        {(props) => <loginScreen {...props} />}
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+/** 
+import * as React from "react";
+import LoginScreen from "./components/login";
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <LoginScreen
+        logoImageSource={require("./icons/snack-icon.png")}
+        onLoginPress={() => {}}
+        onSignupPress={() => {}}
+        onEmailChange={() => {}}
+        onPasswordChange={() => {}}
+      />
+    );
+  }
+}
+*/
