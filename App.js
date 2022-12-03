@@ -13,6 +13,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateActivityView from "./components/CreateActivityView";
 import MetricsView from "./components/MetricsView";
 import LoginScreen from "./components/login";
+import RegisterScreen from "./components/register"
 
 import * as eva from "@eva-design/eva";
 import {
@@ -264,6 +265,11 @@ export default function App() {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
+          screenOptions={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RegisterScreen"
+          component={RegisterScreen}
           screenOptions={{ headerShown: false }}
         />
         <Stack.Screen
