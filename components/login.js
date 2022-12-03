@@ -18,7 +18,6 @@ let nav;
 //let [action, setAction] = useState("Login");
 
 export default class LoginScreen extends Component {
-  
   constructor(props) {
     super(props);
     console.log("PROPS " + JSON.stringify(props));
@@ -70,9 +69,8 @@ export default class LoginScreen extends Component {
     );
   }
 
-  onRegisterPress(){
-    nav.navigate("RegisterScreen")
-
+  onRegisterPress() {
+    nav.navigate("RegisterScreen");
   }
 
   onLoginPress() {
