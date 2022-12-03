@@ -17,7 +17,7 @@ import { handlePostAjaxResponse } from "./utils/utils";
 let nav;
 //let [action, setAction] = useState("Login");
 
-export default class LoginScreen extends Component {
+export default class RegisterScreen extends Component {
   
   constructor(props) {
     super(props);
@@ -52,11 +52,6 @@ export default class LoginScreen extends Component {
                 secureTextEntry={true}
               />
               <View style={styles.buttonsRow}>
-                <Button
-                  buttonStyle={styles.loginButton}
-                  onPress={() => this.onLoginPress()}
-                  title="Login"
-                />
                 <Button
                   buttonStyle={styles.loginButton}
                   onPress={() => this.onRegisterPress()}
