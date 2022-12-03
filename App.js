@@ -176,44 +176,6 @@ export default function App() {
     );
   }
 
-  /** 
-  function testscreen() {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen name="count1">
-          {(props) => (
-            <TestFile2
-              {...props}
-              updateData={setCount}
-              otherProp={count}
-              otherProp2={count1}
-            />
-          )}
-        </Stack.Screen>
-      </Stack.Navigator>
-    );
-  }
-
-  function countscreen() {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen name="count2">
-          {(props) => <TestFile {...props} otherProp={count} />}
-        </Stack.Screen>
-      </Stack.Navigator>
-    );
-  }
-
-  return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={testscreen} />
-        <Tab.Screen name="count" component={countscreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
-  */
-
   return (
     <NavigationContainer>
       <Tab.Navigator

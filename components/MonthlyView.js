@@ -18,7 +18,6 @@ let days = [];
 let months = [];
 
 appendMonths(12);
-prependMonths(13);
 
 //adding future months
 function appendMonths(monthAmount) {
@@ -83,10 +82,6 @@ function initializeDaysForMonth(firstDayOfMonth) {
   return daysForMonth;
 }
 
-function getDateHeader() {
-  return monthNames[month] + " " + year;
-}
-
 let monthNames = [
   "January",
   "February",
@@ -109,6 +104,7 @@ export default function MonthlyView(props) {
   };
 
   const [month, setMonth] = useState(months[0]);
+  console.log(JSON.stringify(month));
 
   const renderList = ({ item, index }) => {
     return (
@@ -135,6 +131,13 @@ export default function MonthlyView(props) {
     );
   };
 
+  function monthString() {
+    let m = month.getMonth();
+    let y = month.getFullYear();
+
+    return monthNames[m] + " " + y;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <SafeAreaView style={styles.viewMonth}>
@@ -153,7 +156,7 @@ export default function MonthlyView(props) {
         <Text
           style={{ flexDirection: "row", alignSelf: "center", fontSize: 25 }}
         >
-          {"December"}
+          {monthString()}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.viewDaysOfWeek}>
@@ -172,6 +175,8 @@ export default function MonthlyView(props) {
           style={styles.days}
           horizontal
           renderItem={renderList}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           //change the text of month based on scroll distance
           onScroll={(event) => {
             const scrollOffset = event.nativeEvent.contentOffset.x;
@@ -223,7 +228,7 @@ const styles = StyleSheet.create({
   },
   listItem: {
     paddingLeft: 18,
-    width: 54.2,
+    width: 53.75,
     height: 105,
     fontSize: 13,
     backgroundColor: "#FFFBFF",
