@@ -24,6 +24,7 @@ import AllJournals from "./components/AllJournals";
 import CreateNote from "./components/CreateNote";
 import Note from "./components/Note";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import RegisterScreen from "./components/register";
 const Drawer = createDrawerNavigator();
 
 let hourSize = Dimensions.get("window").height / 13.34;
@@ -264,6 +265,11 @@ export default function App() {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
+          screenOptions={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RegisterScreen"
+          component={RegisterScreen}
           screenOptions={{ headerShown: false }}
         />
         <Stack.Screen
