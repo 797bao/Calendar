@@ -49,21 +49,21 @@ Instructions
 4. Download Expo globally refer to https://docs.expo.dev/workflow/expo-cli/
 
 5. Choose 1 of 3 options
- a. (Mac only) Download XCode & IOS Simulator to run the project in an IOS simulator
-    https://apps.apple.com/us/app/xcode/id497799835?mt=12
-    Go to Xcode > Open Developer Tool > Simulator
-    Download corresponding simulator of your choice
+    a. (Mac only) Download XCode & IOS Simulator to run the project in an IOS simulator
+        https://apps.apple.com/us/app/xcode/id497799835?mt=12
+        Go to Xcode > Open Developer Tool > Simulator
+        Download corresponding simulator of your choice
     
- b. (Mac & PC) Download Android Studio
-    https://developer.android.com/studio/?gclid=CjwKCAiAhKycBhAQEiwAgf19elRuyXzPsOqKyx4A4OCtlHaXdlI0N_0nM9Tq_Os1pTHr95HJd3JNCRoC4GYQAvD_BwE&gclsrc=aw.ds
-    Download device simulator of your choice 
+    b. (Mac & PC) Download Android Studio
+        https://developer.android.com/studio/?gclid=CjwKCAiAhKycBhAQEiwAgf19elRuyXzPsOqKyx4A4OCtlHaXdlI0N_0nM9Tq_Os1pTHr95HJd3JNCRoC4GYQAvD_BwE&gclsrc=aw.ds
+        Download device simulator of your choice 
  
- c. (Mobile) Download Expo Go on your mobile device
-    (Android) https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US&pli=1
-    (IOS) https://apps.apple.com/us/app/expo-go/id982107779
+    c. (Mobile) Download Expo Go on your mobile device
+        (Android) https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_US&gl=US&pli=1
+        (IOS) https://apps.apple.com/us/app/expo-go/id982107779
 
 6. Open the terminal and type "npm i" to install the dependencies
 This will download all the dependencies defined by the package.json
 
-5. Once all dependencies are downloaded, in the terminal type "npm start" The application will now run the metro bundler
-6. press "a" for android or "i" for ios to open your corresponding device simulator or scan the QR code on your phone to test
+7. Once all dependencies are downloaded, in the terminal type "npm start" The application will now run the metro bundler
+8. press "a" for android or "i" for ios to open your corresponding device simulator or scan the QR code on your phone to test
